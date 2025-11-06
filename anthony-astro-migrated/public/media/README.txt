@@ -1,0 +1,1 @@
+Add images and videos here (e.g., thumbnails and hero videos for each project).
