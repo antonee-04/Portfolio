@@ -1,7 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
 ---
-
 <Base title="2D Top-Down RPG — Case Study (WIP)" description="Early WIP: player movement, animation state control, and pixel-art pipeline.">
   <h1>2D Top-Down RPG <span style="font-size:.6em;opacity:.8">• WIP (Tools/Prototype)</span></h1>
 
@@ -12,29 +11,26 @@ import Base from "../../layouts/Base.astro";
   <section class="prose">
     <h2>Overview</h2>
     <p>
-      This is an early work-in-progress top-down RPG prototype. I assembled a playable sample scene, wired up 8-direction
-      movement with animation parameters, and began a pixel-art pipeline for the player sprite while integrating a purchased tileset.
-      The goal is to validate controls, readability, and a clean art workflow before building systems.
+      Early work-in-progress top-down RPG. I assembled a playable sample scene, wired up 8-direction movement with animation
+      parameters, and began a pixel-art pipeline for the player sprite while integrating a purchased tileset.
+      Goal: validate controls/readability and a clean art workflow before deeper systems.
     </p>
 
     <h2>Footage</h2>
-    <!-- Export your .anim as an MP4 or GIF and drop it in /public/media/tools/videos/ -->
     <video src="/media/tools/videos/walk-cycle.mp4" autoplay muted loop playsinline></video>
 
     <h2>Gallery</h2>
     <div class="grid">
-      <!-- Your existing hero/thumbnail already lives at /media/tools-thumb.jpg -->
-      <img src="/media/tools-thumb.jpg" alt="Sample scene — shrine, pond, and path layout"/>
-      <!-- optional extra shots -->
-      <img src="/media/tools/shots/map-01.jpg" alt="Tile composition and collision pass"/>
+      <img src="/media/tools-thumb.jpg" alt="Sample scene — shrine, pond, and path layout" />
+      <img src="/media/tools/shots/map-01.jpg" alt="Tile composition and collision pass" />
     </div>
 
     <h2>What I built (programmer focus)</h2>
 
-    <h3>Player movement & animation state</h3>
+    <h3>Player movement &amp; animation state</h3>
     <ul>
-      <li>Reads raw input (WASD/Arrow) into a 2D vector, moves the transform in <code>FixedUpdate</code>, and drives the Animator with <code>Horizontal</code>, <code>Vertical</code>, and <code>Speed</code> parameters. :contentReference[oaicite:0]{index=0}</li>
-      <li>Idle vs walk transitions are controlled by <code>Speed</code> (squared magnitude) so the blend tree stays stable even with cardinals/diagonals. :contentReference[oaicite:1]{index=1}</li>
+      <li>Reads raw input (WASD/Arrow) into a 2D vector, moves in <code>FixedUpdate</code>, and drives the Animator with <code>Horizontal</code>, <code>Vertical</code>, and <code>Speed</code> parameters.</li>
+      <li>Idle vs walk transitions by <code>Speed</code> (squared magnitude) so the blend tree stays stable on cardinals/diagonals.</li>
     </ul>
 
     <pre class="code"><code class="language-csharp">{`// PlayerMovement.cs — input, movement, and animator parameters (excerpt)
@@ -65,17 +61,17 @@ void UpdateAnimation() {
 
     <h3>Art workflow (pixel)</h3>
     <ul>
-      <li>Custom player sprite (own artwork) authored at a fixed pixel density; tileset is licensed/credited and assembled in Unity’s Tilemap with rule tiles where possible.</li>
-      <li>Consistent palette and outline values to keep character readable against purchased tiles.</li>
+      <li>Custom player sprite authored at a fixed pixel density; tileset is licensed/credited and assembled in Unity Tilemap.</li>
+      <li>Consistent palette/outline so the character reads against purchased tiles.</li>
     </ul>
 
-    <h2>WIP scope & next steps</h2>
+    <h2>WIP scope &amp; next steps</h2>
     <ul>
-      <li>Polish animation blend tree (8-dir + idle facings), add run/crouch variants.</li>
+      <li>Polish blend tree (8-dir + idle facings), add run/crouch variants.</li>
       <li>Tilemap collision + interact system (talk, pickup, open).</li>
       <li>Camera framing + screen-space UI mock (quests/inventory).</li>
     </ul>
 
-    <p><em>Note: This page represents an active, in-progress prototype for my portfolio. Systems and art are subject to change.</em></p>
+    <p><em>Note: Active WIP prototype; systems and art will evolve.</em></p>
   </section>
 </Base>
