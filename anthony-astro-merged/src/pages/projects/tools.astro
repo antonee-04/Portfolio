@@ -1,14 +1,81 @@
 ---
 import Base from "../../layouts/Base.astro";
 ---
-<Base title="2D Top Down RPG" description="A 2D Top Down RPG built with tiles and my own 2D pixel art and animation">
-  <h1>Editor Tools & Profiling</h1>
-  <p class="muted">Role: Solo • Tech: Unity 2022 LTS, C# • Time: 2025</p>
-  <div class="prose">
+
+<Base title="2D Top-Down RPG — Case Study (WIP)" description="Early WIP: player movement, animation state control, and pixel-art pipeline.">
+  <h1>2D Top-Down RPG <span style="font-size:.6em;opacity:.8">• WIP (Tools/Prototype)</span></h1>
+
+  <p class="muted">
+    <strong>Engine:</strong> Unity 2022 LTS &nbsp;•&nbsp; <strong>Language:</strong> C# &nbsp;•&nbsp; <strong>Role:</strong> Solo Developer &nbsp;•&nbsp; <strong>Art:</strong> Custom player sprite + licensed tileset
+  </p>
+
+  <section class="prose">
+    <h2>Overview</h2>
+    <p>
+      This is an early work-in-progress top-down RPG prototype. I assembled a playable sample scene, wired up 8-direction
+      movement with animation parameters, and began a pixel-art pipeline for the player sprite while integrating a purchased tileset.
+      The goal is to validate controls, readability, and a clean art workflow before building systems.
+    </p>
+
+    <h2>Footage</h2>
+    <!-- Export your .anim as an MP4 or GIF and drop it in /public/media/tools/videos/ -->
+    <video src="/media/tools/videos/walk-cycle.mp4" autoplay muted loop playsinline></video>
+
+    <h2>Gallery</h2>
+    <div class="grid">
+      <!-- Your existing hero/thumbnail already lives at /media/tools-thumb.jpg -->
+      <img src="/media/tools-thumb.jpg" alt="Sample scene — shrine, pond, and path layout"/>
+      <!-- optional extra shots -->
+      <img src="/media/tools/shots/map-01.jpg" alt="Tile composition and collision pass"/>
+    </div>
+
+    <h2>What I built (programmer focus)</h2>
+
+    <h3>Player movement & animation state</h3>
     <ul>
-      <li>Batch mesh combiner for chunk meshes.</li>
-      <li>Build-size audit script.</li>
-      <li>Capture automation for perf runs.</li>
+      <li>Reads raw input (WASD/Arrow) into a 2D vector, moves the transform in <code>FixedUpdate</code>, and drives the Animator with <code>Horizontal</code>, <code>Vertical</code>, and <code>Speed</code> parameters. :contentReference[oaicite:0]{index=0}</li>
+      <li>Idle vs walk transitions are controlled by <code>Speed</code> (squared magnitude) so the blend tree stays stable even with cardinals/diagonals. :contentReference[oaicite:1]{index=1}</li>
     </ul>
-  </div>
+
+    <pre class="code"><code class="language-csharp">{`// PlayerMovement.cs — input, movement, and animator parameters (excerpt)
+public float moveSpeed = 5f;
+private Vector2 movement;
+private Animator animator;
+
+void Update() {
+  movement.x = Input.GetAxisRaw("Horizontal");
+  movement.y = Input.GetAxisRaw("Vertical");
+  UpdateAnimation();
+}
+
+void FixedUpdate() {
+  Vector3 delta = new Vector3(movement.x, movement.y, 0f) * moveSpeed * Time.fixedDeltaTime;
+  transform.position += delta;
+}
+
+void UpdateAnimation() {
+  if (movement.x != 0 || movement.y != 0) {
+    animator.SetFloat("Horizontal", movement.x);
+    animator.SetFloat("Vertical", movement.y);
+    animator.SetFloat("Speed", movement.sqrMagnitude);
+  } else {
+    animator.SetFloat("Speed", 0);
+  }
+}`}</code></pre>
+
+    <h3>Art workflow (pixel)</h3>
+    <ul>
+      <li>Custom player sprite (own artwork) authored at a fixed pixel density; tileset is licensed/credited and assembled in Unity’s Tilemap with rule tiles where possible.</li>
+      <li>Consistent palette and outline values to keep character readable against purchased tiles.</li>
+    </ul>
+
+    <h2>WIP scope & next steps</h2>
+    <ul>
+      <li>Polish animation blend tree (8-dir + idle facings), add run/crouch variants.</li>
+      <li>Tilemap collision + interact system (talk, pickup, open).</li>
+      <li>Camera framing + screen-space UI mock (quests/inventory).</li>
+    </ul>
+
+    <p><em>Note: This page represents an active, in-progress prototype for my portfolio. Systems and art are subject to change.</em></p>
+  </section>
 </Base>
