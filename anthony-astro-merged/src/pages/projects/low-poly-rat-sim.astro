@@ -1,9 +1,118 @@
 ---
 import Base from "../../layouts/Base.astro";
 ---
-<Base title="Low‑poly Rat Simulator" description="Unity project with ragdoll physics and tunnel mechanics.">
-  <h1>Low‑poly Rat Simulator</h1>
-  <div class="prose">
-    <p>Experience life as a mischievous rat exploring a stylized 3D environment. Collect bones while navigating obstacles using ragdoll physics and tunnel mechanics. I designed and implemented the gameplay in Unity, built levels with URP, and integrated a dynamic camera using Cinemachine.</p>
-  </div>
+
+<Base title="Low-poly Rat Simulator — Case Study" description="Unity project featuring ragdoll physics, tunnel mechanics, and a URP/Cinemachine setup.">
+  <h1>Low-poly Rat Simulator</h1>
+
+  <p class="muted">
+    <strong>Engine:</strong> Unity 2022 LTS &nbsp;•&nbsp; <strong>Language:</strong> C# &nbsp;•&nbsp; <strong>Role:</strong> Solo Developer
+  </p>
+
+  <section class="prose">
+    <h2>Overview</h2>
+    <p>
+      A playful low-poly prototype where you control a mischievous rat. The focus was on <em>feel</em>:
+      responsive third-person movement, <strong>ragdoll toggling</strong> (for chaos/falls), a simple
+      <strong>tunnel system</strong> for squeezing through narrow spaces, and a clean <strong>URP</strong> setup
+      with <strong>Cinemachine</strong> for a dynamic camera.
+    </p>
+
+    <h2>Footage</h2>
+    <video src="/media/rat-sim/videos/intro.mp4" autoplay muted loop playsinline></video>
+    <video src="/media/rat-sim/videos/ragdoll.mp4" autoplay muted loop playsinline></video>
+    <video src="/media/rat-sim/videos/tunnels.mp4" autoplay muted loop playsinline></video>
+
+    <div class="grid">
+      <img src="/media/rat-sim/shots/title.jpg" alt="Title/Start view"/>
+      <img src="/media/rat-sim/shots/gameplay.jpg" alt="Gameplay camera framing"/>
+      <img src="/media/rat-sim/shots/ui.jpg" alt="Simple UI indicators"/>
+    </div>
+
+    <h2>What I built (programmer focus)</h2>
+
+    <h3>Character controller & camera</h3>
+    <ul>
+      <li>Third-person movement with grounded checks and coyote-time jump feel.</li>
+      <li><strong>Cinemachine</strong> FreeLook/Virtual Cameras for responsive framing; collision and dead-zone tuning for low-poly sets.</li>
+    </ul>
+
+    <h3>Ragdoll toggle</h3>
+    <ul>
+      <li>Enable/disable ragdoll on demand (e.g., impacts/falls). Animator is disabled while ragdoll is active; on recovery, blend back to an animation pose.</li>
+      <li>All limb rigidbodies are toggled between kinematic (animated) and dynamic (ragdoll).</li>
+    </ul>
+
+    <h3>Tunnel mechanics</h3>
+    <ul>
+      <li>When entering a tunnel trigger, swap to a “crawl” state: adjust collider height/center, reduce speed, limit jump.</li>
+      <li>Optional camera switch to a tighter Cinemachine Virtual Camera for confined spaces.</li>
+    </ul>
+
+    <h3>URP setup</h3>
+    <ul>
+      <li>Simple low-poly, unlit/flat-lit look for clarity and performance.</li>
+      <li>Post-processing profile for subtle vibrance and vignette; kept mobile-friendly.</li>
+    </ul>
+
+    <h2>Representative code</h2>
+
+    <pre class="code"><code class="language-csharp">{`// Toggle ragdoll on/off (attach to root holding Animator + limb rigidbodies)
+[SerializeField] Animator animator;
+[SerializeField] Rigidbody[] ragdollBodies;
+[SerializeField] bool isRagdoll;
+
+void SetRagdoll(bool enabled) {
+  isRagdoll = enabled;
+  animator.enabled = !enabled;
+  foreach (var rb in ragdollBodies) {
+    rb.isKinematic = !enabled;        // dynamic when ragdoll, kinematic when animated
+    rb.detectCollisions = enabled;
+  }
+  // Optionally: add an impulse when entering ragdoll for dramatic effect
+}`}</code></pre>
+
+    <pre class="code"><code class="language-csharp">{`// Simple tunnel enter/exit: shrink collider, adjust movement + optional camera
+[SerializeField] CharacterController cc;
+[SerializeField] float normalHeight = 1.2f, tunnelHeight = 0.6f;
+[SerializeField] float normalSpeed = 5f, tunnelSpeed = 2.5f;
+bool inTunnel;
+
+void OnTriggerEnter(Collider other) {
+  if (other.CompareTag("Tunnel")) {
+    inTunnel = true;
+    cc.height = tunnelHeight;
+    cc.center = new Vector3(0, tunnelHeight * 0.5f, 0);
+  }
+}
+
+void OnTriggerExit(Collider other) {
+  if (other.CompareTag("Tunnel")) {
+    inTunnel = false;
+    cc.height = normalHeight;
+    cc.center = new Vector3(0, normalHeight * 0.5f, 0);
+  }
+}
+
+void Update() {
+  float speed = inTunnel ? tunnelSpeed : normalSpeed;
+  // ... move with speed, clamp jump while inTunnel, etc.
+}`}</code></pre>
+
+    <pre class="code"><code class="language-csharp">{`// Cinemachine: switch VCs (e.g., normal vs tunnel) by priority
+[SerializeField] Cinemachine.CinemachineVirtualCamera normalCam;
+[SerializeField] Cinemachine.CinemachineVirtualCamera tunnelCam;
+
+void SwitchToTunnelCam(bool tunnel) {
+  normalCam.Priority = tunnel ? 0 : 10;
+  tunnelCam.Priority = tunnel ? 10 : 0;
+}`}</code></pre>
+
+    <h2>Results & next steps</h2>
+    <ul>
+      <li>Responsive third-person feel with fun ragdoll moments.</li>
+      <li>Camera stays readable in cramped spaces via VC switch + tuned dead-zones.</li>
+      <li><strong>Next:</strong> add collectibles/objectives, polish recovery from ragdoll with pose matching, and refine tunnel traversal animations.</li>
+    </ul>
+  </section>
 </Base>
