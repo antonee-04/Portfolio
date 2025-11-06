@@ -1,0 +1,14 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds
+dist/
+.build/
+.vercel/output/
+
+# env & misc
+.env
+.env.*
+.DS_Store
+Thumbs.db
