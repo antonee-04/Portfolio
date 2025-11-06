@@ -1,29 +1,101 @@
 ---
 import Base from "../../layouts/Base.astro";
 ---
-<Base title="DiveCraft — Case Study" description="Procedural islands, blocky wave simulation, and chunked terrain meshing.">
-  <h1>DiveCraft — Blocky Waves & Procedural Islands</h1>
-  <p class="muted">Role: Solo • Tech: Unity 2022 LTS, C# • Time: 2025</p>
-  <div class="prose">
-    <h2>Goal</h2>
-    <p>Create a performant vertical slice: island proc-gen, stylised block waves, and chunk meshing at 60 FPS on mid-range hardware.</p>
-    <h2>Highlights</h2>
+
+<Base title="DiveCraft — Case Study (WIP)" description="Final-year WIP: procedural islands, blocky wave simulation, chunk meshing.">
+  <h1>DiveCraft — Blocky Waves & Procedural Islands <span style="font-size:.6em;opacity:.8">• WIP (Final-Year Project)</span></h1>
+
+  <p class="muted">
+    <strong>Engine:</strong> Unity 2022 LTS &nbsp;•&nbsp; <strong>Language:</strong> C# &nbsp;•&nbsp; <strong>Role:</strong> Solo Developer
+  </p>
+
+  <section class="prose">
+    <h2>Overview</h2>
+    <p>
+      DiveCraft is my final-year work-in-progress: a voxel island world with a stylised, block-based wave system and a chunked terrain
+      pipeline. Core systems include chunk generation/meshing, a hotbar + block placement/breaking, a water volume mesh,
+      and player movement with swim physics.
+    </p>
+
+    <h2>Footage</h2>
+    <video src="/media/divecraft/videos/waves.mp4" autoplay muted loop playsinline></video>
+    <video src="/media/divecraft/videos/island_gen.mp4" autoplay muted loop playsinline></video>
+
+    <div class="grid">
+      <img src="/media/divecraft/shots/topdown.jpg" alt="Top-down island view"/>
+      <img src="/media/divecraft/shots/cave.jpg" alt="Underwater terrain"/>
+    </div>
+
+    <h2>What I built (programmer focus)</h2>
+
+    <h3>Chunked world & generation</h3>
     <ul>
-      <li>Chunked terrain meshing (16×16) with greedy mesh combine.</li>
-      <li>Block-wave system (step-style) driven by phase buckets.</li>
-      <li>Editor tools for captures and profiling.</li>
+      <li>
+        A <strong>Worlds</strong> singleton spawns a grid of chunk GameObjects and keeps a lookup of loaded chunks. It batches creation over frames to avoid stalls. :contentReference[oaicite:0]{index=0}
+      </li>
+      <li>
+        Each <strong>Chunks</strong> instance fills a 16×128×16 voxel array, blends
+        an island radial mask with Perlin detail, layers materials (grass/dirt/limestone/stone),
+        and fills above terrain with water up to a defined sea level. :contentReference[oaicite:1]{index=1}
+      </li>
     </ul>
-    <h2>Deep-dive</h2>
-    <div class="code"><pre><code>// Wave update pseudocode
-for each chunk in loadedChunks:
-  phase = (globalTick + chunk.hash) % NUM_PHASES
-  for cell in chunk.surfaceCells[phase]:
-    cell.height = base + stepHeights[phase]
-</code></pre></div>
-    <h2>Links</h2>
+
+    <h3>Meshing & materials</h3>
     <ul>
-      <li><a href="/builds/divecraft/index.html">WebGL Build</a></li>
-      <li><a href="https://github.com/antonee-04" target="_blank" rel="noopener">GitHub</a></li>
+      <li>
+        Solid block mesh is built face-by-face only where neighbors are non-solid (air/water), with UVs
+        pulled from a block atlas; water uses a separate child “WaterMesh” with its own material/UVs, and
+        we skip water-to-water faces for fill-rate. :contentReference[oaicite:2]{index=2}
+      </li>
+      <li>
+        UV helpers, face tables, atlas sizing, and shape flags live in <strong>VoxelData</strong> (e.g., 16×16 chunk width, atlas size = 7, sea level, per-face UV rotation). :contentReference[oaicite:3]{index=3}
+      </li>
     </ul>
-  </div>
+
+    <h3>Interaction & player controller</h3>
+    <ul>
+      <li>
+        <strong>PlayerController</strong> does mouse-look + CharacterController movement, block breaking/placing via camera raycasts,
+        and swim logic when feet are inside a water block (space to rise, shift to sink faster). :contentReference[oaicite:4]{index=4}
+      </li>
+      <li>
+        <strong>Hotbar</strong> cycles block types, with a simple TMP UI showing the current selection. :contentReference[oaicite:5]{index=5} :contentReference[oaicite:6]{index=6}
+      </li>
+    </ul>
+
+    <h2>Representative code</h2>
+    <pre class="code"><code class="language-csharp">
+// Worlds: spawn chunk grid (batched)
+for (int i = 0; i < chunkCoords.Count; i += 8) {
+  for (int j = 0; j < 8 && i + j < chunkCoords.Count; j++) {
+    var coord = chunkCoords[i + j];
+    // new GameObject("Chunk_x_y") + AddComponent<Chunks>() + GenerateChunk()
+  }
+  yield return null; // keep frame times smooth
+}
+    </code></pre>
+
+    <pre class="code"><code class="language-csharp">
+// Chunks: only emit faces against non-solid neighbors (skip water→water)
+if (!IsSolid(neighbor)) {
+  // choose water or solid mesh buffers
+  // add 4 verts, 6 indices, and atlas UVs per visible face
+}
+    </code></pre>
+
+    <pre class="code"><code class="language-csharp">
+// PlayerController: interact with voxels via camera ray
+if (Input.GetMouseButtonDown(0)) TryBreakBlock();
+if (Input.GetMouseButtonDown(1)) TryPlaceBlock();
+    </code></pre>
+
+    <h2>Results & next steps (WIP)</h2>
+    <ul>
+      <li>Stable chunked rendering with separate water mesh and atlas UVs.</li>
+      <li>Functional placement/breaking, swimming, and hotbar.</li>
+      <li><strong>Next:</strong> optimise meshing (greedy merge), expand island variety, add underwater caves & tides, and profiling passes.</li>
+    </ul>
+
+    <p><em>Note: This page represents an active, in-progress build for my final-year university project.</em></p>
+  </section>
 </Base>
