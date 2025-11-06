@@ -1,0 +1,1 @@
+Place your Unity WebGL build files here (index.html, Build/, TemplateData/). Use gzip compression.
