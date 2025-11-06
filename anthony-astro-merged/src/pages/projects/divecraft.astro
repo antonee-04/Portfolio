@@ -31,12 +31,12 @@ import Base from "../../layouts/Base.astro";
     <h3>Chunked world & generation</h3>
     <ul>
       <li>
-        A <strong>Worlds</strong> singleton spawns a grid of chunk GameObjects and keeps a lookup of loaded chunks. It batches creation over frames to avoid stalls. :contentReference[oaicite:0]{index=0}
+        A <strong>Worlds</strong> singleton spawns a grid of chunk GameObjects and keeps a lookup of loaded chunks. It batches creation over frames to avoid stalls.
       </li>
       <li>
         Each <strong>Chunks</strong> instance fills a 16×128×16 voxel array, blends
         an island radial mask with Perlin detail, layers materials (grass/dirt/limestone/stone),
-        and fills above terrain with water up to a defined sea level. :contentReference[oaicite:1]{index=1}
+        and fills above terrain with water up to a defined sea level.
       </li>
     </ul>
 
@@ -45,10 +45,10 @@ import Base from "../../layouts/Base.astro";
       <li>
         Solid block mesh is built face-by-face only where neighbors are non-solid (air/water), with UVs
         pulled from a block atlas; water uses a separate child “WaterMesh” with its own material/UVs, and
-        we skip water-to-water faces for fill-rate. :contentReference[oaicite:2]{index=2}
+        we skip water-to-water faces for fill-rate.
       </li>
       <li>
-        UV helpers, face tables, atlas sizing, and shape flags live in <strong>VoxelData</strong> (e.g., 16×16 chunk width, atlas size = 7, sea level, per-face UV rotation). :contentReference[oaicite:3]{index=3}
+        UV helpers, face tables, atlas sizing, and shape flags live in <strong>VoxelData</strong> (e.g., 16×16 chunk width, atlas size = 7, sea level, per-face UV rotation).
       </li>
     </ul>
 
@@ -56,38 +56,33 @@ import Base from "../../layouts/Base.astro";
     <ul>
       <li>
         <strong>PlayerController</strong> does mouse-look + CharacterController movement, block breaking/placing via camera raycasts,
-        and swim logic when feet are inside a water block (space to rise, shift to sink faster). :contentReference[oaicite:4]{index=4}
+        and swim logic when feet are inside a water block (space to rise, shift to sink faster).
       </li>
       <li>
-        <strong>Hotbar</strong> cycles block types, with a simple TMP UI showing the current selection. :contentReference[oaicite:5]{index=5} :contentReference[oaicite:6]{index=6}
+        <strong>Hotbar</strong> cycles block types, with a simple TMP UI showing the current selection.
       </li>
     </ul>
 
     <h2>Representative code</h2>
-    <pre class="code"><code class="language-csharp">
-// Worlds: spawn chunk grid (batched)
+
+    <pre class="code"><code class="language-csharp">{`// Worlds: spawn chunk grid (batched)
 for (int i = 0; i < chunkCoords.Count; i += 8) {
   for (int j = 0; j < 8 && i + j < chunkCoords.Count; j++) {
     var coord = chunkCoords[i + j];
     // new GameObject("Chunk_x_y") + AddComponent<Chunks>() + GenerateChunk()
   }
-  yield return null; // keep frame times smooth
-}
-    </code></pre>
+  // yield return null; // keep frame times smooth
+}`}</code></pre>
 
-    <pre class="code"><code class="language-csharp">
-// Chunks: only emit faces against non-solid neighbors (skip water→water)
+    <pre class="code"><code class="language-csharp">{`// Chunks: only emit faces against non-solid neighbors (skip water→water)
 if (!IsSolid(neighbor)) {
   // choose water or solid mesh buffers
   // add 4 verts, 6 indices, and atlas UVs per visible face
-}
-    </code></pre>
+}`}</code></pre>
 
-    <pre class="code"><code class="language-csharp">
-// PlayerController: interact with voxels via camera ray
+    <pre class="code"><code class="language-csharp">{`// PlayerController: interact with voxels via camera ray
 if (Input.GetMouseButtonDown(0)) TryBreakBlock();
-if (Input.GetMouseButtonDown(1)) TryPlaceBlock();
-    </code></pre>
+if (Input.GetMouseButtonDown(1)) TryPlaceBlock();`}</code></pre>
 
     <h2>Results & next steps (WIP)</h2>
     <ul>
