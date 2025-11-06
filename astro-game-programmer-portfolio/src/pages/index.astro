@@ -1,0 +1,20 @@
+---
+import Base from "../layouts/Base.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+---
+<Base title="Anthony Grummett — Game Programmer" description="Gameplay/Console programmer portfolio: systems, proc-gen, tools, performance.">
+  <section class="hero">
+    <h1>Anthony Grummett — <span style="opacity:.8">Gameplay / Console Programmer</span></h1>
+    <p>Procedural generation, systems programming, performance, and tools. Unity • C# • PS5 SDK familiarity.</p>
+    <p><strong>Currently:</strong> Building voxel water & island gen, AI grid pathfinding, and internal tooling.</p>
+  </section>
+
+  <section>
+    <h2>Selected Projects</h2>
+    <div class="grid">
+      <ProjectCard href="/projects/divecraft" title="DiveCraft — Blocky Waves & Procedural Islands" blurb="Perlin terrain + custom block-wave system; chunk meshing & culling for stable frame times." tags={['Unity','C#','Proc Gen','Performance']} video="/media/divecraft-hero.mp4" />
+      <ProjectCard href="/projects/ai-grid" title="AI Grid Pathfinding" blurb="Custom grid graph, A*, terrain sampling, and debug overlays; fixed spikes & GC churn." tags={['Unity','AI','A*','Tools']} image="/media/aigrid-thumb.jpg" />
+      <ProjectCard href="/projects/tools" title="Editor Tools & Profiling" blurb="Mesh combine utility, capture scripts, build-size trims, and validation tooling." tags={['Unity','Editor','DX']} image="/media/tools-thumb.jpg" />
+    </div>
+  </section>
+</Base>

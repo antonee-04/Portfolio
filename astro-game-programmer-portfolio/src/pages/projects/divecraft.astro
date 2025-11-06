@@ -1,0 +1,46 @@
+---
+import Base from "../../layouts/Base.astro";
+---
+<Base title="DiveCraft — Case Study" description="Procedural islands, blocky wave simulation, and chunked terrain meshing.">
+  <h1>DiveCraft — Blocky Waves & Procedural Islands</h1>
+  <p class="muted">Role: Solo • Tech: Unity 2022 LTS, C# • Time: 2025</p>
+  <div class="prose">
+    <h2>Goal</h2>
+    <p>Create a performant vertical slice: island proc-gen, stylised block waves, and chunk meshing that holds 60 FPS on a mid-range laptop.</p>
+
+    <h2>Highlights</h2>
+    <ul>
+      <li>Chunked terrain meshing (16×16) with greedy mesh combine. Draw calls ↓ by ~70%.</li>
+      <li>Block-wave system (step-style) driven by LUT phase offsets, no heavy shaders.</li>
+      <li>Editor tools for capture and profiling, plus addressables for media.</li>
+    </ul>
+
+    <h2>Deep-dive: Wave Rebuild</h2>
+    <p><em>Problem:</em> Original shader-based waves caused GC allocations and unstable frame times.</p>
+    <p><em>Solution:</em> Rebuilt as discrete block steps with phase buckets and batched updates.</p>
+    <div class="code"><pre><code>// Pseudocode snippet (10–20 lines)
+for each chunk in loadedChunks:
+  phase = (globalTick + chunk.hash) % NUM_PHASES
+  for cell in chunk.surfaceCells[phase]:
+    cell.height = base + stepHeights[phase]
+// Batches update only a subset each frame to keep spikes flat.
+</code></pre></div>
+
+    <h2>Results</h2>
+    <ul>
+      <li>Frame-time variance reduced (12–18 ms → 12–13 ms avg in test scene).</li>
+      <li>Build size trimmed by 18% via texture atlas consolidation.</li>
+    </ul>
+
+    <h2>What I'd improve</h2>
+    <p>GPU-driven culling, async chunk IO, water atlas split for step animation.</p>
+
+    <h2>Links</h2>
+    <ul>
+      <li><a href="/builds/divecraft/index.html">WebGL Build</a> (fallback video below)</li>
+      <li><a href="https://github.com/yourname/divecraft" target="_blank" rel="noopener">GitHub Repo</a></li>
+    </ul>
+  </div>
+
+  <video src="/media/divecraft-hero.mp4" controls playsinline></video>
+</Base>
