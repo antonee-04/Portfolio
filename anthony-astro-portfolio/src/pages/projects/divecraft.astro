@@ -1,0 +1,30 @@
+---
+import Base from "../../layouts/Base.astro";
+---
+<Base title="DiveCraft — Case Study" description="Procedural islands, blocky wave simulation, and chunked terrain meshing.">
+  <h1>DiveCraft — Blocky Waves & Procedural Islands</h1>
+  <p class="muted">Role: Solo • Tech: Unity 2022 LTS, C# • Time: 2025</p>
+  <div class="prose">
+    <h2>Goal</h2>
+    <p>Create a performant vertical slice: island proc-gen, stylised block waves, and chunk meshing at 60 FPS on mid-range hardware.</p>
+    <h2>Highlights</h2>
+    <ul>
+      <li>Chunked terrain meshing (16×16) with greedy mesh combine.</li>
+      <li>Block-wave system (step-style) driven by phase buckets.</li>
+      <li>Editor tools for captures and profiling.</li>
+    </ul>
+    <h2>Deep-dive</h2>
+    <div class="code"><pre><code>// Wave update pseudocode
+for each chunk in loadedChunks:
+  phase = (globalTick + chunk.hash) % NUM_PHASES
+  for cell in chunk.surfaceCells[phase]:
+    cell.height = base + stepHeights[phase]
+</code></pre></div>
+    <h2>Links</h2>
+    <ul>
+      <li><a href="/builds/divecraft/index.html">WebGL Build</a> (if hosted locally)</li>
+      <li><a href="https://github.com/antonee-04" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://anthonygrummett818.wixsite.com/grummettgames" target="_blank" rel="noopener">More on my Wix portfolio</a></li>
+    </ul>
+  </div>
+</Base>

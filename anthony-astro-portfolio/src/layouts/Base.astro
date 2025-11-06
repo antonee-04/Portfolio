@@ -1,0 +1,47 @@
+---
+const { title = 'Anthony Grummett — Portfolio', description = 'Game programmer portfolio' } = Astro.props;
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <title>{title}</title>
+    <link rel="stylesheet" href="/src/styles/base.css" />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <nav>
+          <a href="/" class={Astro.url.pathname==='/'?'active':''}>Home</a>
+          <a href="/projects" class={Astro.url.pathname.startsWith('/projects')?'active':''}>Projects</a>
+          <a href="/about" class={Astro.url.pathname==='/about'?'active':''}>About</a>
+          <a href="/contact" class={Astro.url.pathname==='/contact'?'active':''}>Contact</a>
+          <span style="margin-left:auto;"></span>
+          <a href="/Anthony_Grummett_CV.pdf">CV</a>
+          <a href="https://github.com/antonee-04" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://www.linkedin.com/in/anthony-grummett-008917261/" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://anthonygrummett818.wixsite.com/grummettgames" target="_blank" rel="noopener">Wix</a>
+        </nav>
+      </div>
+    </header>
+    <main class="main">
+      <div class="container">
+        <slot />
+      </div>
+    </main>
+    <footer>
+      <div class="container">
+        <p>© {new Date().getFullYear()} Anthony Grummett — Gameplay/Console Programmer • UK</p>
+        <div class="socials">
+          <a class="badge" href="https://github.com/antonee-04" target="_blank" rel="noopener">GitHub</a>
+          <a class="badge" href="https://www.linkedin.com/in/anthony-grummett-008917261/" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="badge" href="https://anthonygrummett818.wixsite.com/grummettgames" target="_blank" rel="noopener">Wix</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

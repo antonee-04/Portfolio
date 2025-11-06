@@ -1,0 +1,15 @@
+---
+import Base from "../../layouts/Base.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+const projects = [
+  { href: "/projects/divecraft", title: "DiveCraft — Blocky Waves & Procedural Islands", blurb: "Perlin terrain + custom block-wave system; chunk meshing & culling for stable frame times.", tags: ["Unity","C#","Proc Gen","Performance"], image: "/media/divecraft-hero.jpg" },
+  { href: "/projects/ai-grid", title: "AI Grid Pathfinding", blurb: "Custom grid graph, A*, terrain sampling, and debug overlays; fixed spikes & GC churn.", tags: ["Unity","AI","A*","Tools"], image: "/media/aigrid-thumb.jpg" },
+  { href: "/projects/tools", title: "Editor Tools & Profiling", blurb: "Mesh combine utility, capture scripts, build-size trims, and validation tooling.", tags: ["Unity","Editor","DX"], image: "/media/tools-thumb.jpg" },
+];
+---
+<Base title="Projects — Anthony Grummett" description="Game programming projects and case studies.">
+  <h1>Projects</h1>
+  <div class="grid">
+    {projects.map(p => <ProjectCard {...p} />)}
+  </div>
+</Base>
