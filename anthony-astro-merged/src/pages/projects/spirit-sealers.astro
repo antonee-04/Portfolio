@@ -1,15 +1,58 @@
 ---
 import Base from "../../layouts/Base.astro";
 ---
-<Base title="Spirit Sealers — 3D RPG" description="3D RPG inspired by Pokémon. Unreal Engine (Blueprints).">
-  <h1>Spirit Sealers — 3D RPG</h1>
-  <div class="prose">
-    <p>Spirit Sealers is a 3D RPG inspired by Pokémon. I designed and implemented the combat and level systems using Unreal Engine and Blueprint scripting. Players fight spirits, collect items and explore imaginative levels while capturing and leveling their companions.</p>
-    <h2>My Contributions</h2>
+
+<Base title="Spirit Sealers — Case Study" description="First-year Unreal Engine project built entirely in Blueprints. A Pokémon-style ghost-catching game featuring AI pursuit and turn-based battles.">
+  <h1>Spirit Sealers <span style="font-size:.6em;opacity:.8">• First-Year University Project</span></h1>
+
+  <p class="muted">
+    <strong>Engine:</strong> Unreal Engine 5 (BluePrints) &nbsp;•&nbsp;
+    <strong>Language:</strong> Visual Scripting (Blueprint) &nbsp;•&nbsp;
+    <strong>Role:</strong> Solo Designer &amp; Programmer
+  </p>
+
+  <section class="prose">
+    <h2>Overview</h2>
+    <p>
+      <strong>Spirit Sealers</strong> was my first-year university game project and my first full experience developing a prototype inside Unreal Engine.  
+      The game is a <em>Pokémon-style top-down RPG</em> where players explore a haunted landscape filled with wandering ghosts.  
+      When ghosts detect the player within range, they <strong>chase and engage</strong> them in a turn-based battle, where the player can choose to <strong>Fight</strong> or <strong>Run</strong>.  
+      The focus was learning level scripting, AI behaviour trees, and combat state management through Unreal’s Blueprint system.
+    </p>
+
+    <h2>Footage</h2>
+    <video src="/media/spirit-sealers/videos/gameplay.mp4" autoplay muted loop playsinline></video>
+
+    <h2>Gallery</h2>
+    <div class="grid">
+      <img src="/media/spirit-sealers/shots/map-overview.jpg" alt="Dungeon layout and ghost patrol routes"/>
+      <img src="/media/spirit-sealers/shots/battle-ui.jpg" alt="Battle interface and ghost encounter"/>
+    </div>
+
+    <h2>Blueprint systems</h2>
     <ul>
-      <li>Combat flow and stat/level progression in Blueprints</li>
-      <li>Encounter and capture mechanics</li>
-      <li>Level design blockouts and UI hooks</li>
+      <li><strong>BP_TopDownCharacter / BP_TopDownController</strong> — player input, camera follow, and movement logic for the top-down view.  </li>
+      <li><strong>BP_enemy / BP_SpEnemy</strong> — ghost AI that patrols and switches to chase when the player enters range.  </li>
+      <li><strong>BP_Spawner / BP_Dungeon</strong> — manages ghost spawn points and randomises encounters across the map.  </li>
+      <li><strong>BattleContext</strong> — handles turn order, action selection, and outcome resolution in battle scenes. </li>
+      <li><strong>GameOver</strong> — blueprint for scene transition and UI reset when the player loses or runs. </li>
     </ul>
-  </div>
+
+    <h2>Gameplay loop</h2>
+    <ol>
+      <li>Explore the overworld and avoid or engage roaming spirits.</li>
+      <li>When contact occurs, switch to the battle arena handled by <code>BattleContext</code>.</li>
+      <li>Use “Fight” to damage or “Run” to escape; ghosts re-aggro if the player returns.</li>
+      <li>Winning seals the ghost; losing triggers <code>GameOver</code> UI logic.</li>
+    </ol>
+
+    <h2>Reflection</h2>
+    <p>
+      Working entirely in Blueprint taught me the fundamentals of scripting flow, object communication, and event-driven logic.  
+      It also introduced me to AI perception, collision triggers, and state-based design — all of which influenced later C# projects such as DiveCraft and AI-Grid.  
+      <strong>Spirit Sealers</strong> marked the start of my interest in hybrid gameplay systems that blend exploration with reactive AI encounters.
+    </p>
+
+    <p><em>Note: This was my first academic game project, created to learn Unreal Engine’s Blueprint architecture and core game-loop construction.</em></p>
+  </section>
 </Base>
