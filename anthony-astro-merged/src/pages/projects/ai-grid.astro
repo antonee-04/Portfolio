@@ -1,19 +1,100 @@
 ---
 import Base from "../../layouts/Base.astro";
 ---
-<Base title="AI Grid Pathfinding — Case Study" description="Custom grid graph, A*, terrain sampling, and debug overlays.">
-  <h1>AI Grid Pathfinding</h1>
-  <p class="muted">Role: Solo • Tech: Unity 2022 LTS, C# • Time: 2025</p>
-  <div class="prose">
-    <h2>Highlights</h2>
+
+<Base title="AI Grid — Space Samurai Zombie Cowboy (WIP)" description="Third-year Programming Systems for Games module project. Prototype of a lunar zombie shooter using an A* grid, pathfinding, and low-gravity systems.">
+  <h1>AI Grid / Space Samurai Zombie Cowboy <span style="font-size:.6em;opacity:.8">• WIP — Third-Year Programming Systems for Games</span></h1>
+
+  <p class="muted">
+    <strong>Engine:</strong> Unity 2022 LTS &nbsp;•&nbsp;
+    <strong>Language:</strong> C# &nbsp;•&nbsp;
+    <strong>Focus:</strong> Systems programming, AI navigation, and low-gravity mechanics
+  </p>
+
+  <section class="prose">
+    <h2>Overview</h2>
+    <p>
+      This ongoing project forms my <strong>Programming Systems for Games</strong> university module in third year.  
+      The aim is to build a scalable <strong>AI grid and pathfinding system</strong> that will later serve as the foundation for
+      <em>Space Samurai Zombie Cowboy</em> — a stylised zombie shooter set on the moon.  
+      Players will choose between three distinct classes — <strong>Cowboy, Ninja,</strong> and <strong>Astronaut</strong> — each
+      offering different movement, weapon handling, and recoil behaviours in low gravity.  
+      The zombies will react dynamically to sound, light, and player class behaviour, creating emergent combat encounters.
+    </p>
+
+    <h2>Footage</h2>
+    <video src="/media/ai-grid/videos/pathfinding-demo.mp4" autoplay muted loop playsinline></video>
+
+    <h2>Gallery</h2>
+    <div class="grid">
+      <img src="/media/ai-grid/shots/debug-grid.jpg" alt="Debug grid visualisation" />
+      <img src="/media/ai-grid/shots/shooter-prototype.jpg" alt="Early prototype of the lunar shooter environment" />
+    </div>
+
+    <h2>Core systems</h2>
     <ul>
-      <li>Terrain sampling + node validity checks for void/steep tiles.</li>
-      <li>Pool-based open/closed sets to avoid GC allocations.</li>
-      <li>Toggleable gizmo rendering and heatmap captures.</li>
+      <li><strong>GridGraph</strong> — dynamically samples the terrain, checks obstacles and slope angles, and builds a walkability map for AI navigation. </li>
+      <li><strong>AStarPathFinder</strong> — clean A* implementation generating walkable routes between two points for agents or projectiles. </li>
+      <li><strong>PathTest</strong> — a utility visualiser using a <code>LineRenderer</code> to debug live A* paths as objects move. </li>
+      <li><strong>LowGKinController</strong> — fully custom low-gravity first-person controller that simulates lunar physics, step-height logic, and jump buffering. </li>
+      <li><strong>FPCameraBob</strong> &amp; <strong>FPRecoil</strong> — procedural camera motion and spring-based recoil system to give weapons physical feedback.  </li>
+      <li><strong>SimplePistol</strong> + <strong>SimpleHealth</strong> — early combat and target feedback prototype, serving as placeholders for class-specific weapons and zombie health.  </li>
     </ul>
-    <h2>Links</h2>
+
+    <h2>Representative code</h2>
+
+    <pre class="code"><code class="language-csharp">{`// AStarPathFinder.cs — simplified pathfinding loop
+while (open.Count > 0)
+{
+    open.Sort((a, b) => a.f.CompareTo(b.f));
+    var current = open[0];
+    open.RemoveAt(0);
+
+    if (current.node == goal)
+        return Reconstruct(current);
+
+    closed.Add(current.node);
+
+    foreach (var neigh in graph.GetNeighbours(current.node))
+    {
+        if (!neigh.walkable || closed.Contains(neigh))
+            continue;
+
+        float g = current.g + Vector3.Distance(current.node.worldPos, neigh.worldPos);
+        float f = g + Heuristic(neigh, goal);
+
+        var existing = open.Find(r => r.node == neigh);
+        if (existing != null && g >= existing.g) continue;
+
+        if (existing == null)
+            open.Add(new NodeRecord { node = neigh, parent = current, g = g, f = f });
+        else
+        {
+            existing.parent = current; existing.g = g; existing.f = f;
+        }
+    }
+}`}</code></pre>
+
+    <pre class="code"><code class="language-csharp">{`// LowGKinController.cs — low-gravity jump and movement logic
+if (CanJump())
+{
+    lastJumpPressedTime = -999f;
+    float v = Mathf.Sqrt(2f * Mathf.Abs(gravity) * jumpHeight);
+    velocity = Vector3.ProjectOnPlane(velocity, groundNormal);
+    velocity.y = v;
+    grounded = false;
+    jumpLockoutUntil = Time.time + jumpLockout;
+}`}</code></pre>
+
+    <h2>Future direction</h2>
     <ul>
-      <li><a href="https://github.com/antonee-04" target="_blank" rel="noopener">GitHub</a></li>
+      <li>Integrate <strong>AI agents</strong> with personality-based behaviour (cowardly vs aggressive zombies).</li>
+      <li>Layer the A* grid with <strong>sound and light maps</strong> so zombies react to stimuli differently.</li>
+      <li>Expand the <strong>class system</strong> — Cowboy (kinetic), Ninja (stealth), Astronaut (tech) — each using the same AI grid but exploiting it in unique ways.</li>
+      <li>Add modular weapon scripts with recoil variance and lunar dust FX.</li>
+      <li>Experiment with partial procedural environments and dynamic low-G physics hazards.</li>
     </ul>
-  </div>
+
+    <p><em>This project is a work-in-progress for my final academic year and will evolve into a complete lunar zombie shooter demo built around systems programming and AI behaviour research.</em></p>
+  </section>
 </Base>
