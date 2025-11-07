@@ -2,59 +2,158 @@
 import Base from "../../layouts/Base.astro";
 ---
 
-<Base title="Maths for Games — Case Study" description="Second-year university module exploring applied mathematics for gameplay systems.">
-  <h1>Maths for Games <span style="font-size:.6em;opacity:.8">• Second-Year University Module</span></h1>
+<Base title="Maths for Games (Year 2) — Ship Builder (Build + Flight, WIP)" description="Year-2 module. Custom maths (MyVector/MyQuaternion/TRS), grid ship builder, camera/hotbar, save→spawn, low-G flight, spatial hashing, swept collisions.">
+  <h1>Maths for Games — Ship Builder <span style="font-size:.6em;opacity:.8">• Year 2 • Build + Flight (WIP)</span></h1>
 
   <p class="muted">
-    <strong>Focus:</strong> Vector maths, transformations, physics simulation, and curve evaluation &nbsp;•&nbsp;
-    <strong>Engine:</strong> Unity 2022 LTS (C#)
+    <strong>Engine:</strong> Unity 2022 LTS &nbsp;•&nbsp; <strong>Language:</strong> C# &nbsp;•&nbsp; 
+    <strong>Focus:</strong> Custom maths, grid systems, physics, and gameplay programming
   </p>
 
   <section class="prose">
     <h2>Overview</h2>
     <p>
-      This project was developed for my <strong>Maths for Games</strong> module in second year.
-      The goal was to apply mathematical concepts directly to gameplay systems — including
-      vector operations, quaternions, projectile motion, and spline-based camera movement.
-      It acted as both a technical learning exercise and a chance to build reusable math
-      libraries for my later projects.
+      A two-phase technical project for my <strong>Maths for Games</strong> module. The <em>Build Phase</em> lets you assemble a ship on a 3D grid
+      using my own math types (vectors/quaternions/TRS). The <em>Flight Phase</em> reconstructs the saved layout into a physical craft,
+      computes COM/inertia, maps thrusters to controls, and flies in a low-gravity asteroid field with spatial-hash broad-phase and
+      swept-sphere collision resolution. Work in progress.
     </p>
 
-    <h2>Footage</h2>
-    <video src="/media/maths-for-games/videos/demo.mp4" autoplay muted loop playsinline></video>
-
-    <h2>Gallery</h2>
-    <div class="grid">
-      <img src="/media/maths-for-games/shots/vectors.jpg" alt="Debug visualisation of vector addition and projection"/>
-      <img src="/media/maths-for-games/shots/trajectory.jpg" alt="Projectile trajectory plotted in Unity"/>
-    </div>
-
-    <h2>Key implementations</h2>
+    <!-- BUILD PHASE -->
+    <h2>Build Phase</h2>
     <ul>
-      <li>Custom <code>MyVector3</code> class implementing addition, dot/cross products, and magnitude/direction functions.</li>
-      <li>Quaternion-to-Euler and Euler-to-Quaternion conversions coded manually for rotation testing.</li>
-      <li>Projectile trajectory solver using <code>v² = u² + 2as</code> and time-stepped integration.</li>
-      <li>Spline-based path interpolation for camera motion using Hermite and Bézier curves.</li>
+      <li>Snap-to-grid placement and discrete rotation with a preview ghost; commit to build.</li>
+      <li>Orbit/zoom build camera focused around a point; scroll zooms toward cursor hit.</li>
+      <li>Hotbar selects part data; save pipeline serialises grid position + rotation (TRS) for each part.</li>
     </ul>
 
-    <pre class="code"><code class="language-csharp">{`// Example from MyVector3.cs
-public static MyVector3 Cross(MyVector3 a, MyVector3 b)
-{
-    return new MyVector3(
-        a.y * b.z - a.z * b.y,
-        a.z * b.x - a.x * b.z,
-        a.x * b.y - a.y * b.x
-    );
-}`}</code></pre>
+    <h3>Footage</h3>
+    <video src="/media/maths-for-games/videos/build-demo.mp4" autoplay muted loop playsinline></video>
+
+    <div class="grid">
+      <img src="/media/maths-for-games/shots/grid.jpg" alt="Build grid and part previews" />
+      <img src="/media/maths-for-games/shots/hotbar.jpg" alt="Hotbar and part selection" />
+    </div>
+
+    <!-- FLIGHT PHASE -->
+    <h2>Flight Phase</h2>
+    <p>
+      The flight scene reconstructs the saved ship, recentres on its computed centre of mass, calculates a diagonalised moment of inertia,
+      and flies using forces/torques from distributed thrusters. The scene also spawns drifting asteroids and runs a spatial-hash
+      broad-phase with per-frame swept sphere checks to resolve collisions.
+    </p>
+
+    <h3>Rebuild ship from save</h3>
+    <p>
+      A spawner reads serialised part entries (type, grid position, rotation) and instantiates the ship, grouping any disconnected
+      fragments into separate movers.
+    </p>
+    <pre class="code"><code class="language-csharp">{`// FlightShipSpawner — rebuild ship from ShipSaveData, centre on COM, split fragments
+ShipSaveData data = LaunchManager.Instance.savedShip;
+foreach (var partData in data.parts) {
+  // pick prefab by type; compute TRS(partData.gridPosition, partData.rotation, 1)
+  // place/rotate, parent under ShipRoot, register into ShipMover
+}
+mover.CenterOnCOM();
+// find disconnected clusters -> keep main cluster on ShipRoot, spawn loose fragments
+`}</code></pre> <!-- FlightShipSpawner.cs & ShipSaveData.cs -->
+    <p class="muted">See the spawner and save format definitions.</p>
+
+    <h3>Low-G flight, thrust & torque</h3>
+    <p>
+      Each thruster contributes a force and a torque τ = r × F relative to COM; inputs map to canonical directions, and angular
+      velocity integrates into a quaternion delta each frame.
+    </p>
+    <pre class="code"><code class="language-csharp">{`// ShipMover — integrate forces/torques; update rotation via angular velocity
+MyVector3 totalForce = 0, totalTorque = 0;
+foreach (var t in thrusters) {
+  if (Input.GetKey(t.assignedKey)) {
+    MyVector3 F = t.thrustDirection * thrustPower;
+    totalForce += F;
+    totalTorque += MyVector3.Cross(t.localPosition, F);
+  }
+}
+velocity += (totalForce / ComputeTotalMass()) * Time.deltaTime;
+position += velocity * Time.deltaTime;
+
+MyVector3 angAcc = new MyVector3(
+  totalTorque.x / max(momentOfInertia.x, 0.01f),
+  totalTorque.y / max(momentOfInertia.y, 0.01f),
+  totalTorque.z / max(momentOfInertia.z, 0.01f)
+);
+angularVelocity += angAcc * Time.deltaTime;
+MyQuaternion dq = ShipMover.FromAngularVelocity(angularVelocity * Time.deltaTime);
+transform.rotation = (dq * currentRotation).Normalize().ToUnity();
+`}</code></pre>
+    <p class="muted">Thruster mapping, COM recentring, inertia calculation, and update loop.</p>
+
+    <h3>Camera chase (quaternion orbit)</h3>
+    <p>
+      A chase camera orbits the target using custom Euler→Quaternion math; position lerps for smoothness, then LookAt target.
+    </p>
+    <pre class="code"><code class="language-csharp">{`// FlightCamera — yaw/pitch control, quaternion orbit, smooth follow
+yaw += mouseX * sens; pitch = clamp(pitch - mouseY * sens, -80, 80);
+MyQuaternion q = EulerToQuaternion(pitch, yaw, 0);
+MyVector3 desired = targetPos + q.Rotate(new MyVector3(0, 0, -distance));
+currentPosition = Lerp(currentPosition, desired, smooth * Time.deltaTime);
+`}</code></pre>
+
+    <h3>Asteroid field & motion</h3>
+    <p>
+      Procedural asteroid spawning with random scale/velocity; inertia approximated as a solid sphere.
+      Boundary bounce reflects velocity against an outer sphere.
+    </p>
+    <pre class="code"><code class="language-csharp">{`// AsteroidSpawner — random prefab, scale/mass, velocity; add AsteroidMotion if missing
+GameObject asteroid = Instantiate(prefab, pos, rot);
+motion.velocity = randomDir.Normalize() * Random.Range(30f, 80f);
+motion.radius = boundsExtentsMagnitude * scale;
+motion.mass = Lerp(100f, 1000f, scaleT);
+`}</code></pre>
+    <pre class="code"><code class="language-csharp">{`// AsteroidMotion — integrate position + rotation; boundary reflection
+position += velocity * dt;
+MyQuaternion dq = ShipMover.FromAngularVelocity(angularVelocity * dt);
+rotation = (dq * rotation).Normalize();
+// reflect if leaving spherical boundary
+if (distFromCenter > boundaryRadius - radius) {
+  MyVector3 n = toCenter.Normalize();
+  velocity = velocity - n * 2f * MyVector3.Dot(velocity, n);
+}
+`}</code></pre>
+
+    <h3>Spatial hashing & swept collisions</h3>
+    <p>
+      Broad-phase uses a spatial hash (voxel grid) to restrict pair checks, then per-cell <em>swept sphere</em> tests for continuous
+      collision with time-of-impact and post-collision integration.
+    </p>
+    <pre class="code"><code class="language-csharp">{`// SpatialHashGrid — hash + neighborhood query
+Vector3Int HashPosition(MyVector3 p) => floor(p / cellSize);
+Add(collider) -> grid[HashPosition(collider.position)].Add(collider);
+GetNearby(p) -> gather 27 neighboring cells
+`}</code></pre>
+    <pre class="code"><code class="language-csharp">{`// CollisionManager — for each cell, do swept-sphere tests; resolve at TOI, then finish step
+if (MyCollision.SweptSphereCollision(a.pos, a.vel, a.r, b.pos, b.vel, b.r, dt, out float toi)) {
+  a.pos += a.vel * toi;
+  b.pos += b.vel * toi;
+  // resolve (impulses, angular response), then advance remaining dt - toi
+}
+`}</code></pre>
+
+    <h3>Extras</h3>
+    <ul>
+      <li>Base asteroid data wrapper (mass/radius) for runtime sync with motion.</li>
+      <li>Ship data format used by both phases (parts with grid pose + rotation).</li>
+    </ul>
+
+    <h2>Flight Phase Footage</h2>
+    <video src="/media/maths-for-games/videos/flight-demo.mp4" autoplay muted loop playsinline></video>
 
     <h2>Reflection</h2>
     <p>
-      This module helped me bridge the gap between pure mathematics and interactive design.
-      Writing my own vector and quaternion libraries gave me deeper control over transformations
-      and paved the way for later systems such as DiveCraft’s physics-based water simulation and
-      the AI grid pathfinding.
+      Building the toolchain forced me to implement TRS, COM/inertia, quaternion deltas from angular velocity, and continuous collision in a
+      way that plugs straight into gameplay. Next up: damage → detachment → drifting clusters interacting with asteroids; thrust limits, fuel,
+      and better visualisation of force/torque vectors.
     </p>
 
-    <p><em>Note: This page represents an academic module rather than a full game, focusing on applied programming mathematics in Unity.</em></p>
+    <p><em>Note: Active WIP. Build and Flight phases will continue to evolve through profiling and iteration.</em></p>
   </section>
 </Base>
