@@ -1,0 +1,60 @@
+---
+import Base from "../../layouts/Base.astro";
+---
+
+<Base title="Maths for Games — Case Study" description="Second-year university module exploring applied mathematics for gameplay systems.">
+  <h1>Maths for Games <span style="font-size:.6em;opacity:.8">• Second-Year University Module</span></h1>
+
+  <p class="muted">
+    <strong>Focus:</strong> Vector maths, transformations, physics simulation, and curve evaluation &nbsp;•&nbsp;
+    <strong>Engine:</strong> Unity 2022 LTS (C#)
+  </p>
+
+  <section class="prose">
+    <h2>Overview</h2>
+    <p>
+      This project was developed for my <strong>Maths for Games</strong> module in second year.
+      The goal was to apply mathematical concepts directly to gameplay systems — including
+      vector operations, quaternions, projectile motion, and spline-based camera movement.
+      It acted as both a technical learning exercise and a chance to build reusable math
+      libraries for my later projects.
+    </p>
+
+    <h2>Footage</h2>
+    <video src="/media/maths-for-games/videos/demo.mp4" autoplay muted loop playsinline></video>
+
+    <h2>Gallery</h2>
+    <div class="grid">
+      <img src="/media/maths-for-games/shots/vectors.jpg" alt="Debug visualisation of vector addition and projection"/>
+      <img src="/media/maths-for-games/shots/trajectory.jpg" alt="Projectile trajectory plotted in Unity"/>
+    </div>
+
+    <h2>Key implementations</h2>
+    <ul>
+      <li>Custom <code>MyVector3</code> class implementing addition, dot/cross products, and magnitude/direction functions.</li>
+      <li>Quaternion-to-Euler and Euler-to-Quaternion conversions coded manually for rotation testing.</li>
+      <li>Projectile trajectory solver using <code>v² = u² + 2as</code> and time-stepped integration.</li>
+      <li>Spline-based path interpolation for camera motion using Hermite and Bézier curves.</li>
+    </ul>
+
+    <pre class="code"><code class="language-csharp">{`// Example from MyVector3.cs
+public static MyVector3 Cross(MyVector3 a, MyVector3 b)
+{
+    return new MyVector3(
+        a.y * b.z - a.z * b.y,
+        a.z * b.x - a.x * b.z,
+        a.x * b.y - a.y * b.x
+    );
+}`}</code></pre>
+
+    <h2>Reflection</h2>
+    <p>
+      This module helped me bridge the gap between pure mathematics and interactive design.
+      Writing my own vector and quaternion libraries gave me deeper control over transformations
+      and paved the way for later systems such as DiveCraft’s physics-based water simulation and
+      the AI grid pathfinding.
+    </p>
+
+    <p><em>Note: This page represents an academic module rather than a full game, focusing on applied programming mathematics in Unity.</em></p>
+  </section>
+</Base>
