@@ -1,15 +1,84 @@
 ---
 import Base from "../../layouts/Base.astro";
 ---
-<Base title="API Multiplayer Chat Room" description="Unity Netcode lobby + real-time chat demo.">
-  <h1>API Multiplayer Chat Room</h1>
-  <div class="prose">
-    <p>This Unity project demonstrates networked chat functionality. I built a lobby system with Unity Netcode for GameObjects and implemented real-time chat so players can host and join sessions and communicate seamlessly.</p>
-    <h2>Key Features</h2>
+
+<Base title="API Multiplayer Chatroom — Case Study" description="University module project: Programming APIs — multiplayer chatroom built with Unity Netcode for GameObjects.">
+  <h1>API Multiplayer Chatroom <span style="font-size:.6em;opacity:.8">• University Project — Programming APIs</span></h1>
+
+  <p class="muted">
+    <strong>Engine:</strong> Unity 2022 LTS &nbsp;•&nbsp;
+    <strong>Framework:</strong> Netcode for GameObjects (MLAPI) &nbsp;•&nbsp;
+    <strong>Language:</strong> C# &nbsp;•&nbsp;
+    <strong>Team:</strong> 3 Programmers (my focus – Chat UI &amp; Team Systems)
+  </p>
+
+  <section class="prose">
+    <h2>Overview</h2>
+    <p>
+      For my <strong>Programming APIs</strong> university module, our team of three created a small multiplayer chatroom using
+      Unity’s <strong>Netcode for GameObjects</strong>.  
+      I implemented the entire player-to-player communication system — from the text chat box and input handling to team-based visibility and player identification.
+    </p>
+
+    <h2>Footage</h2>
+    <video src="/media/api-multiplayer-chat/videos/chat-demo.mp4" autoplay muted loop playsinline></video>
+
+    <h2>Gallery</h2>
+    <div class="grid">
+      <img src="/media/api-multiplayer-chat/shots/lobby.jpg" alt="Lobby interface showing red/blue team chats" />
+      <img src="/media/api-multiplayer-chat/shots/chat-ui.jpg" alt="Chat UI and player list" />
+    </div>
+
+    <h2>My contributions</h2>
     <ul>
-      <li>Host/Join lobby flow</li>
-      <li>Real-time chat sync</li>
-      <li>Connection status and basic UI</li>
+      <li>Implemented <strong>team-restricted chat</strong> using <code>ServerRpc</code> and <code>ClientRpc</code> messaging in <code>TeamChat</code>. </li>
+      <li>Created the singleton <code>ChatUIManager</code> that manages input fields and dynamically shows the correct team chat window. </li>
+      <li>Built <strong>name-entry and team assignment</strong> systems (<code>NameTag</code>, <code>PlayerID</code>) with <code>NetworkVariable&lt;FixedString32Bytes&gt;</code> for synced data.  </li>
+      <li>Maintained the player list UI (<code>PlayerListText</code>) to reflect join/leave events across clients. </li>
+      <li>Added <code>FaceCamera</code> utility to keep nameplates oriented to the active camera. </li>
     </ul>
-  </div>
+
+    <h2>Representative code</h2>
+
+    <pre class="code"><code class="language-csharp">{`// TeamChat.cs — send chat messages only to players on the same team
+[ServerRpc(RequireOwnership = false)]
+private void SendMessageServerRpc(string message, string team, ServerRpcParams rpcParams = default)
+{
+    BroadcastMessageToTeamClientRpc($"{playerID.PlayerName}: {message}", team);
+}
+
+[ClientRpc]
+private void BroadcastMessageToTeamClientRpc(string message, string team)
+{
+    if (playerID.PlayerTeam.ToString() == team)
+    {
+        if (team == "Red")
+            ChatUIManager.Instance.teamAChatDisplay.text += message + "\\n";
+        else if (team == "Blue")
+            ChatUIManager.Instance.teamBChatDisplay.text += message + "\\n";
+    }
+}`}</code></pre>
+
+    <pre class="code"><code class="language-csharp">{`// PlayerID.cs — assign random team and propagate player name to all clients
+private void AssignRandomTeam()
+{
+    string team = Random.Range(0, 2) == 0 ? "Red" : "Blue";
+    playerTeam.Value = new FixedString32Bytes(team);
+}
+
+[ServerRpc]
+private void AssignRandomTeamServerRpc()
+{
+    AssignRandomTeam();
+}`}</code></pre>
+
+    <h2>Reflection</h2>
+    <p>
+      This project solidified my understanding of <strong>RPC flow</strong>, <strong>client-server authority</strong>,
+      and <strong>NetworkVariable data replication</strong> within Unity.  
+      I also learned the importance of decoupling UI logic from networking so multiple clients can see consistent state updates.
+    </p>
+
+    <p><em>Note: Built for my Programming APIs module to demonstrate teamwork, Netcode integration, and networked UI systems.</em></p>
+  </section>
 </Base>
