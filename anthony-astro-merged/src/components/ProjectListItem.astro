@@ -1,0 +1,30 @@
+---
+export interface Props {
+  href: string;
+  title: string;
+  blurb: string;
+  image?: string;
+  tags?: string[];
+  extra?: string; // extra 1–2 lines of detail for the list view
+}
+const { href, title, blurb, image, tags = [], extra = "" } = Astro.props;
+---
+<div class="list-item">
+  {image ? (
+    <a href={href} class="thumb">
+      <img src={image} alt={title} loading="lazy" />
+    </a>
+  ) : null}
+
+  <div class="info">
+    <a href={href} class="title"><h3>{title}</h3></a>
+    <p class="blurb">{blurb}</p>
+    {extra ? <p class="extra">{extra}</p> : null}
+    {tags.length ? (
+      <div class="tags">
+        {tags.map(t => <span class="tag">{t}</span>)}
+      </div>
+    ) : null}
+    <a class="more" href={href}>View case study →</a>
+  </div>
+</div>

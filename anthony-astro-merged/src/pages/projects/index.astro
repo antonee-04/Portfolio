@@ -1,21 +1,72 @@
 ---
 import Base from "../../layouts/Base.astro";
-import ProjectCard from "../../components/ProjectCard.astro";
+import ProjectListItem from "../../components/ProjectListItem.astro";
+
 const projects = [
   // Newer
-  { href: "/projects/divecraft", title: "DiveCraft — Blocky Waves & Procedural Islands", blurb: "Perlin terrain + custom block-wave system; chunk meshing & culling for stable frame times.", tags: ["Unity","C#","Proc Gen","Performance"], image: "/media/divecraft-hero.jpg" },
-  { href: "/projects/ai-grid", title: "AI Grid Pathfinding", blurb: "Custom grid graph, A*, terrain sampling, and debug overlays; fixed spikes & GC churn.", tags: ["Unity","AI","A*","Tools"], image: "/media/aigrid-thumb.jpg" },
-  { href: "/projects/maths-for-games", title: "AsterAvoid - Maths for games module", blurb: "Spaceship Builder and asteroid avoider Second-year module focused on vector maths and applied physics programming", tags: ["Unity","Physics","Raycasting","Tools"], image: "/media/maths-for-games.jpg" },
-  { href: "/projects/tools", title: "2D Top Down RPG", blurb: "Mesh combine utility, capture scripts, build-size trims, and validation tooling.", tags: ["Unity","Editor","DX"], image: "/media/tools-thumb.jpg" },
+  {
+    href: "/projects/divecraft",
+    title: "DiveCraft — Blocky Waves & Procedural Islands",
+    blurb: "Perlin terrain + block-wave system; chunk meshing & culling for stable frame times.",
+    extra: "WIP vertical slice focusing on performant chunk generation and a stylised step-wave ocean.",
+    tags: ["Unity","C#","Proc Gen","Performance"],
+    image: "/media/divecraft-hero.jpg",
+  },
+  {
+    href: "/projects/ai-grid",
+    title: "AI Grid / Space Samurai Zombie Cowboy",
+    blurb: "Custom A*, terrain sampling/validation, low-G controller, recoil & camera bob.",
+    extra: "Third-year ‘Programming Systems for Games’ module — evolving into a lunar zombie shooter with Cowboy/Ninja/Astronaut classes.",
+    tags: ["Unity","AI","A*","Systems"],
+    image: "/media/aigrid-thumb.jpg",
+  },
+  {
+    href: "/projects/maths-for-games",
+    title: "Maths for Games — Ship Builder (Build + Flight)",
+    blurb: "Custom TRS math, grid ship builder, save→flight; COM/inertia, thrusters & spatial hashing.",
+    extra: "Year-2 module: build-phase editor UX + flight-phase physics with swept collisions in an asteroid field.",
+    tags: ["Unity","Physics","Math","Tools"],
+    image: "/media/maths-for-games.jpg",
+  },
+  {
+    href: "/projects/tools",
+    title: "2D Top-Down RPG (WIP)",
+    blurb: "8-direction movement, animation params, pixel-art pipeline with licensed tileset.",
+    extra: "Prototype scene to validate controls/readability before building systems.",
+    tags: ["Unity","2D","Animation"],
+    image: "/media/tools-thumb.jpg",
+  },
   // Wix-era
-  { href: "/projects/spirit-sealers", title: "Spirit Sealers — 3D RPG", blurb: "Pokémon‑inspired RPG in Unreal (Blueprints). Built combat & levelling systems.", tags: ["Unreal","Blueprints","RPG"], image: "/media/spirit-sealers.jpg" },
-  { href: "/projects/api-multiplayer-chat", title: "API Multiplayer Chat Room", blurb: "Unity netcode demo with lobby & real-time chat.", tags: ["Unity","Netcode","Networking"], image: "/media/api-chat.jpg" },
-  { href: "/projects/low-poly-rat-sim", title: "Low‑poly Rat Simulator", blurb: "URP + Cinemachine; ragdoll physics & tunnel mechanics.", tags: ["Unity","URP","C#"], image: "/media/rat-sim.jpg" },
+  {
+    href: "/projects/spirit-sealers",
+    title: "Spirit Sealers — 3D RPG",
+    blurb: "Pokémon-style prototype (Unreal Blueprints): overworld ghosts, chase range, turn-based battles.",
+    extra: "First-year university project built entirely with Blueprints.",
+    tags: ["Unreal","Blueprints","RPG"],
+    image: "/media/spirit-sealers.jpg",
+  },
+  {
+    href: "/projects/api-multiplayer-chat",
+    title: "API Multiplayer Chatroom",
+    blurb: "Team project — text chat UI, team-restricted messaging, player name/ID sync.",
+    extra: "Built for the ‘Programming APIs’ module using Netcode for GameObjects.",
+    tags: ["Unity","Netcode","Networking"],
+    image: "/media/api-chat.jpg",
+  },
+  {
+    href: "/projects/low-poly-rat-sim",
+    title: "Low-poly Rat Simulator",
+    blurb: "Third-person feel, ragdoll toggle, tunnel traversal; URP + Cinemachine.",
+    extra: "Focus on character feel and camera readability in tight spaces.",
+    tags: ["Unity","URP","C#"],
+    image: "/media/rat-sim.jpg",
+  },
 ];
 ---
+
 <Base title="Projects — Anthony Grummett" description="Game programming projects and case studies.">
   <h1>Projects</h1>
-  <div class="grid">
-    {projects.map(p => <ProjectCard {...p} />)}
+  <div class="list">
+    {projects.map(p => <ProjectListItem {...p} />)}
   </div>
 </Base>
