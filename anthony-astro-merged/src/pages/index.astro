@@ -2,9 +2,9 @@
 import Base from "../layouts/Base.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 ---
-<Base title="Anthony Grummett — Game Programmer" description="Gameplay/Console programmer portfolio: systems, proc-gen, tools, performance.">
+<Base title="Anthony Grummett — Game Programmer" description="Gameplay programmer portfolio: systems, proc-gen, tools, performance.">
   <section class="hero">
-    <h1>Anthony Grummett — <span style="opacity:.8">Gameplay / Console Programmer</span></h1>
+    <h1>Anthony Grummett — <span style="opacity:.8">Gameplay Programmer</span></h1>
     <p>Procedural generation, systems programming, performance, and tools. Unity • C#.</p>
     <div class="cta">
       <a class="button" href="/projects">View Projects</a>
@@ -13,16 +13,16 @@ import ProjectCard from "../components/ProjectCard.astro";
   </section>
 
   <section>
-    <h2>Selected Projects</h2>
+    <h2>Featured Projects</h2>
     <div class="grid">
       <!-- Newer projects -->
       <ProjectCard href="/projects/divecraft" title="DiveCraft — Blocky Waves & Procedural Islands" blurb="Perlin terrain + custom block-wave system; chunk meshing & culling for stable frame times." tags={['Unity','C#','Proc Gen','Performance']} image="/media/divecraft-hero.jpg" />
       <ProjectCard href="/projects/ai-grid" title="AI Grid Pathfinding" blurb="Custom grid graph, A*, terrain sampling, and debug overlays; fixed spikes & GC churn." tags={['Unity','AI','A*','Tools']} image="/media/aigrid-thumb.jpg" />
-      <ProjectCard href="/projects/tools" title="2D Top Down RPG" blurb="A 2D Top Down RPG game using tiles and my own pixel art and animations" tags={['Unity','Editor','DX']} image="/media/tools-thumb.jpg" />
-      <ProjectCard href="/projects/maths-for-games" title="AsterAvoid - uni project" blurb="A game built for my maths for games module at uni, combining a build system and a flight system to make a spaceship" tags={['Unity','Physics','Raycasting']} image="/media/maths-for-games.jpg" />
-      <!-- Wix-era projects -->
-      <ProjectCard href="/projects/api-multiplayer-chat" title="API Multiplayer Chat Room" blurb="Unity netcode demo with lobby & real-time chat." tags={['Unity','Netcode','Networking']} image="/media/api-chat.jpg" />
       <ProjectCard href="/projects/low-poly-rat-sim" title="Low‑poly Rat Simulator" blurb="URP + Cinemachine; ragdoll physics & tunnel mechanics." tags={['Unity','URP','C#']} image="/media/rat-sim.jpg" />
+      <ProjectCard href="/projects/maths-for-games" title="AsterAvoid - uni project" blurb="A game built for my maths for games module at uni, combining a build system and a flight system to make a spaceship" tags={['Unity','Physics','Raycasting']} image="/media/maths-for-games.jpg" />
+      <!-- old-era projects -->
+      <ProjectCard href="/projects/tools" title="2D Top Down RPG" blurb="A 2D Top Down RPG game using tiles and my own pixel art and animations" tags={['Unity','Editor','DX']} image="/media/tools-thumb.jpg" />
+      <ProjectCard href="/projects/api-multiplayer-chat" title="API Multiplayer Chat Room" blurb="Unity netcode demo with lobby & real-time chat." tags={['Unity','Netcode','Networking']} image="/media/api-chat.jpg" />
       <ProjectCard href="/projects/spirit-sealers" title="Spirit Sealers — 3D RPG" blurb="Pokémon‑inspired RPG in Unreal (Blueprints). Built combat & levelling systems." tags={['Unreal','Blueprints','RPG']} image="/media/spirit-sealers.jpg" />
     </div>
   </section>
