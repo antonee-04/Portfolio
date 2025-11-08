@@ -1,9 +1,78 @@
 ---
 import Base from "../layouts/Base.astro";
 ---
-<Base title="About — Anthony Grummett" description="About Anthony — gameplay/console programmer focusing on systems, proc-gen, performance.">
-  <h1>About</h1>
-  <div class="prose">
-    <p>I'm a game developer and programmer currently at the University of Portsmouth. With a lifelong passion for gaming, I strive to create immersive and worlds that captivate players. Join me on this journey as I bring fun and engaging experiences to life through my games!</p>
-  </div>
+
+<Base title="About — Anthony Grummett" description="Gameplay programmer focusing on systems, procedural generation, AI/navigation, and performance.">
+  <h1>About Me</h1>
+
+  <section class="prose">
+    <p>
+      I’m <strong>Anthony Grummett</strong>, a gameplay programmer who enjoys building
+      <em>systems</em>—procedural worlds, custom AI/navigation, and performance-minded tools. I work primarily in
+      <strong>Unity (C#)</strong>, and I like taking features from rough prototype to something that ships and runs well.
+      My portfolio mixes university modules with personal projects that push my understanding of engine internals,
+      math, and low-level problem solving.
+    </p>
+
+    <h2>What I’m great at</h2>
+    <ul>
+      <li><strong>Systems programming:</strong> chunked terrain, greedy meshing, save/load pipelines, data-driven tooling.</li>
+      <li><strong>AI / Navigation:</strong> grid graphs, A* pathfinding, terrain sampling/validation, debug visualisation.</li>
+      <li><strong>Procedural generation:</strong> Perlin/Fractal noise islands, stylised block-wave systems, cave/biome hooks.</li>
+      <li><strong>Performance &amp; profiling:</strong> GC churn reduction, allocations audits, frame-time stability work.</li>
+      <li><strong>Networking basics:</strong> Netcode for GameObjects RPC flow, UI sync, team/visibility logic.</li>
+    </ul>
+
+    <h2>Toolbox</h2>
+    <p class="socials">
+      <span class="badge">Unity 2022/2023 LTS</span>
+      <span class="badge">C#</span>
+      <span class="badge">URP</span>
+      <span class="badge">Cinemachine</span>
+      <span class="badge">Netcode (NGO)</span>
+      <span class="badge">Physics &amp; Math</span>
+      <span class="badge">Pathfinding (A*)</span>
+      <span class="badge">Git / GitHub</span>
+      <span class="badge">Vercel / Astro</span>
+    </p>
+
+    <h2>Selected highlights</h2>
+    <ul>
+      <li><strong>DiveCraft (WIP):</strong> Procedural islands + stylised block-wave simulation with chunked meshing and editor tooling.</li>
+      <li><strong>AI Grid / Space Samurai Zombie Cowboy (WIP):</strong> third-year module—custom A*, low-G controller, recoil/camera bob, moving toward a lunar zombie shooter with class design.</li>
+      <li><strong>API Multiplayer Chatroom:</strong> team project—chat UI, team-restricted messaging, player name/ID sync via NetworkVariables.</li>
+      <li><strong>Maths for Games — Ship Builder (WIP):</strong> year-2 module—custom TRS math, grid builder, save→flight pipeline; low-G flight with spatial hashing and swept collisions.</li>
+      <li><strong>Low-poly Rat Simulator:</strong> third-person feel, ragdoll toggle, tunnel traversal, URP + Cinemachine setup.</li>
+      <li><strong>Spirit Sealers (Unreal, Blueprints):</strong> first-year top-down Pokémon-style prototype with ghost chase + turn-based battles.</li>
+    </ul>
+
+    <h2>Education</h2>
+    <p>
+      <strong>University of Portsmouth</strong> — Game Technology. Year 1 Modules include - 3D Modelling, Art for Games, Code Studio, Coding and Scripting for games, Game Development and Games Design
+      Year 2 Modules include -  Programming APIs, Programming Systems for Games, Gameplay programming, Program Consoles (Ps5 dev kits) and Maths for Games,
+      Year 3 Modules include - my Final year project (DiveCraft), Real-time Interactive Group Project (Working with Frontier Developments), Programming systems and Targeting Platforms most of which are represented in my portfolio projects with year 3 modules being ongoing.
+    </p>
+
+    <h2>Currently</h2>
+    <ul>
+      <li>Turning the AI Grid work into a playable lunar zombie shooter with <em>Cowboy / Ninja / Astronaut</em> classes.</li>
+      <li>Iterating DiveCraft’s wave phases, chunk streaming, and underwater features.</li>
+      <li>Hardening my ship-builder’s Flight phase with better torque visualisation and debris clustering.</li>
+    </ul>
+
+    <h2>How I work</h2>
+    <p>
+      I keep features measurable and traceable: perf captures, allocation notes, and before/after gifs.
+      I like small tools that speed up iteration (capture scripts, mesh combiners, validators) and I value readable
+      debug output for AI and physics.
+    </p>
+
+    <h2>Links &amp; Contact</h2>
+    <p>
+      <a href="/Anthony_Grummett_CV.pdf" class="button">Download CV</a>
+      &nbsp;·&nbsp; <a href="https://github.com/antonee-04" target="_blank" rel="noopener">GitHub</a>
+      &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/anthony-grummett-008917261/" target="_blank" rel="noopener">LinkedIn</a>
+      &nbsp;·&nbsp; <a href="/contact">Contact</a>
+    </p>
+  </section>
 </Base>
