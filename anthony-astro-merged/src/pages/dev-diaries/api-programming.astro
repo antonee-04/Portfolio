@@ -3,5 +3,102 @@ import Base from "../../layouts/Base.astro";
 ---
 <Base title="API Programming — Research & Analysis">
   <h1>API Programming — Research, Analysis and Justification of APIs</h1>
-  <p>When starting this project, the first question we were asked was, “What is an API?” (Continue your full write‑up here.)</p>
+   
+   <section class="prose">
+    <h2>Research, Analysis &amp; Justification of APIs</h2>
+    <p>
+      When starting this project, the first question we were asked was, “What is an API?” Many definitions exist online but most
+      feel abstract. (Qiu, 2016, as cited by Ofoeda et al., 2019) argues that Application Programming Interfaces (APIs) support
+      software reuse by providing pre-implemented functionality, reducing the effort and time required to build software. In short:
+      APIs help developers ship faster by reusing robust, existing building blocks instead of reinventing the wheel.
+    </p>
+
+    <p>
+      Our team’s initial focus was on <strong>AI APIs</strong> for games—specifically Large Language Models (LLMs) for dynamic NPC
+      dialogue. For example, OpenAI’s GPT-4 API uses transformer architectures trained on vast datasets (Brown et&nbsp;al., 2020)
+      to generate natural-language responses; parameters allow tuning tone/length/style (OpenAI, 2023).
+      We also explored <strong>speech-to-text</strong> and <strong>text-to-speech</strong> via Microsoft Azure Cognitive Services
+      (Microsoft, 2023) to enable voice-interactive NPCs.
+    </p>
+
+    <p>
+      I compared common API models—<strong>REST</strong>, <strong>RPC</strong>, and <strong>GraphQL</strong>. REST (Fielding, 2000) is
+      ubiquitous and simple (CRUD over HTTP), and OpenAI’s API is RESTful. RPC emphasises efficiency by invoking remote methods
+      directly, while GraphQL lets clients query precisely the data they need (Sadalage &amp; Fowler, 2012). We leaned toward
+      REST for accessibility and ecosystem support.
+    </p>
+
+    <p>
+      Reality check: <strong>cost</strong>. Many AI APIs are pay-as-you-go—OpenAI by tokens, Azure Speech by character counts
+      (Microsoft, 2023; OpenAI, 2023). With limited budget, and the integration surface (LLM + STT + TTS) being large, we pivoted
+      to a scoped, feasible target that still taught us API design in games: <strong>Unity Netcode for GameObjects</strong>.
+      Netcode provides state synchronisation for real-time multiplayer and integrates cleanly with Unity (Unity Technologies, 2023).
+      Unlike REST-driven request/response, Netcode focuses on <em>low-latency replication</em> and <em>authority</em> models—ideal
+      for our <strong>multiplayer chatroom</strong> brief.
+    </p>
+
+    <h2>Problem Solving &amp; Appraisal</h2>
+    <p>
+      Early on, I struggled with APIs in general. Documentation assumed familiarity with concepts like replication, message passing,
+      and server authority. I bridged the gap through tutorials, forums, and peer help until I had a baseline to contribute.
+    </p>
+
+    <p>
+      A tooling setback blocked me: Git wasn’t in my system <em>PATH</em>, so I couldn’t open the shared repo. A teammate shared a
+      tutorial; adding Git to PATH fixed it and unblocked my work—good reminder that collaboration matters even for “simple” issues.
+    </p>
+
+    <p>
+      Catch-up pressure made integration harder. I needed my <code>TeamChat</code> to cooperate with an existing <code>PlayerID</code>.
+      After tracing references and project hierarchy, I found <code>PlayerID</code> lived on the <code>NetworkManager</code>; attaching
+      <code>TeamChat</code> alongside it let them coordinate. Then I hit a subtle but critical bug: my script inherited
+      <code>MonoBehaviour</code> instead of <code>NetworkBehaviour</code>, breaking networking. Fixing inheritance immediately restored
+      the expected Netcode behaviour.
+    </p>
+
+    <p>
+      Next, I needed multi-instance testing. Once I learned how to build and run several clients locally, a new bug appeared:
+      joining players “broke” chat. Logs showed that joining disrupted team assignments. I moved team selection to <strong>server-side
+      authority</strong> via <code>ServerRpc</code> and replicated state to clients, stabilising assignments.
+    </p>
+
+    <p>
+      With teams stable, chat spammed messages due to multiple triggers firing the send routine; adding an early-return guard ensured
+      it executed once per keypress. Another design issue: messages appeared globally rather than per-team. Lacking a ready tutorial
+      for team-restricted chat in NGO, I implemented a pragmatic solution—<strong>separate team chat panels in the UI</strong>, toggled
+      by the local player’s team. This made messages <em>visible only to the intended team</em> while keeping code straightforward.
+    </p>
+
+    <p>
+      Key lessons: respect API-specific requirements (e.g., <code>NetworkBehaviour</code>), log deeply while debugging, test with
+      realistic multi-client setups, and keep UI/network responsibilities decoupled.
+    </p>
+
+    <h2>Reflection</h2>
+    <p>
+      Our original LLM + STT + TTS vision was ambitious and informative, but Unity Netcode was the right pragmatic pivot:
+      it fit our resources, met the module goals, and built real-time networking skills I can reuse. I grew from API novice to
+      shipping a functioning multiplayer chatroom—with team-based messaging (still a little finicky) and clearer mental models
+      of authority, replication, and client/server flow.
+    </p>
+
+    <p>
+      Team communication waxed and waned; I could have been more proactive during quiet periods. Even so, teammates’ steady
+      contributions gave me a solid base to integrate my features. Going forward I’ll push for earlier alignment, keep small
+      integration spikes, and document decisions to reduce friction.
+    </p>
+
+    <h2>Works Cited</h2>
+    <ul>
+      <li>Brown, T., Mann, B., Ryder, N., Subbiah, M., Kaplan, J. D., … Amodei, D. (2020). <em>Language Models are Few-Shot Learners</em>. NeurIPS 33, 1877–1901.</li>
+      <li>Fielding, R. T. (2000). <em>Architectural styles and the design of network-based software architectures</em>. (Doctoral dissertation).</li>
+      <li>Microsoft. (2023). <em>Speech-to-text and text-to-speech API documentation</em>. https://learn.microsoft.com/</li>
+      <li>Ofoeda, J., Boateng, R., &amp; Effah, J. (2019). Application Programming Interface (API) Research: A Review of the Past to Inform the Future. <em>International Journal of Enterprise Information Systems</em>, 15(3), 76–95. https://doi.org/10.4018/IJEIS.2019070105</li>
+      <li>OpenAI. (2023). <em>OpenAI API documentation</em>. https://platform.openai.com/docs</li>
+      <li>Sadalage, P. J., &amp; Fowler, M. (2012). <em>NoSQL Distilled</em>. Addison-Wesley.</li>
+      <li>Unity Technologies. (2023). <em>Netcode for GameObjects</em>. https://unity.com/</li>
+    </ul>
+
+    <p><em>Note: This diary captures my learning process—what worked, what didn’t, and why we pivoted—during the API Programming module.</em></p>
+  </section>
 </Base>

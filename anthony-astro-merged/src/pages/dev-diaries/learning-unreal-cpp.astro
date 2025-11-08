@@ -3,5 +3,106 @@ import Base from "../../layouts/Base.astro";
 ---
 <Base title="Learning with C++ and Unreal">
   <h1>Learning with C++ and Unreal</h1>
-  <p>C++ — My first attempts with C++ were kept pretty basic but, having used C# before, I was fairly confident in the fundamentals. (Continue your full diary here.)</p>
+  
+  <section class="prose">
+    <h2>C++ — First steps</h2>
+    <p>
+      My first attempts with C++ were kept pretty basic. Having used C# before, I felt confident with core coding logic,
+      but I deliberately kept scope small to learn the differences between C# and C++ and to refresh fundamentals before
+      tackling a larger task.
+    </p>
+
+    <h3>19/10/2023 — Hello World</h3>
+    <p>
+      The classic starting point. I wrote a simple “Hello World!” using examples from the C++ docs. The immediate
+      differences from C# were using <code>cout</code> instead of <code>Console.WriteLine</code>, and the inclusion of
+      <code>#include &lt;iostream&gt;</code> and <code>using namespace std;</code>. Research clarified that
+      <code>&lt;iostream&gt;</code> provides I/O facilities and <code>std</code> exposes standard types/functions.
+      A straightforward start, but a good warm-up.
+    </p>
+
+    <h3>24/10/2023 — Messing with functions</h3>
+    <p>
+      I built a small text scene using functions, random numbers, and a <code>for</code> loop. RNG differed from C# and
+      required <code>#include &lt;time.h&gt;</code>, but once understood it felt familiar. I used RNG to give the player
+      a chance to “die” on initiating a duel, just to branch dialogue. The main gotcha was function order—I didn’t realise
+      a function needed to be defined (or prototyped) before its use, which stalled me for a while. I also temporarily
+      called <code>main()</code> in an <code>if</code> branch to restart dialogue—fine for a toy demo, but in a real game
+      I’d add proper input retry trees.
+    </p>
+    <p>
+      Overall: the logic carried over easily from C#, and most issues were syntax/ordering. Ready to attempt something
+      more complex next.
+    </p>
+
+    <h2>C++ Game — Simple board game</h2>
+
+    <h3>24/11/2023 — Using vectors to set up a board</h3>
+    <p>
+      I translated my C# array approach into C++ <code>std::vector</code> containers for storing board coordinates.
+      A <code>printBoard</code> function builds the grid with nested loops (rows/columns), so the board is generated
+      automatically at any size—cleaner to render and easier to index for moves and checks.
+    </p>
+
+    <h3>29/11/2023 — Functions for playing</h3>
+    <p>
+      I added functions to let the player choose <code>X</code> or <code>O</code> and to place moves into the board.
+      Basic input validation avoids bad entries. The computer picks random squares (simple but functional); a smarter AI
+      could react to player moves later. I ran into an invalid-input loop edge case and solved it by restructuring rather
+      than recursively recalling the same function.
+    </p>
+
+    <h3>03/12/2023 — Win and tie conditions</h3>
+    <p>
+      I implemented <em>win</em> and <em>tie</em> checks. Tie checks scan for any empty squares rather than counting turns,
+      which avoids early termination when input is invalid. The win check loops lines and returns true on three-in-a-row.
+      Using a <em>current player</em> parameter allowed one function to check either player, and the <code>?:</code> operator
+      kept the call compact.
+    </p>
+
+    <h2>Starting on Unreal (Blueprints)</h2>
+
+    <h3>26/11/2023 — Creating a multi-shot gun</h3>
+    <p>
+      I began with Unreal Engine, focusing on Blueprints. Modifying the first-person template via tutorial let me map engine
+      concepts to programming logic I already knew. Nodes like <em>ForEach</em> felt analogous to code loops; I used this to
+      fire multiple shots at once. Tutorials helped me understand the ecosystem; next, I aimed to build unaided to deepen learning.
+    </p>
+
+    <h3>28/11/2023 — Triggering multi-shot (solo)</h3>
+    <p>
+      Working alone, I added a trigger for multi-shot. My knowledge of <code>if</code> statements mapped to Blueprint’s
+      <em>Branch</em> node, driven by a variable tracking the right mouse button. The biggest friction was finding the right
+      nodes among many options, so I mixed research (e.g., “is there an if-statement in Unreal?”) with exploration. I’ll keep
+      expanding with commonly used nodes and push the first-person BP further.
+    </p>
+
+    <h2>Unreal project — Top-down prototype</h2>
+    <p>
+      After a gap (spent on multiple game jams and practice), I returned using the top-down template and focused only on new
+      concepts I learned rather than recapping everything.
+    </p>
+
+    <h3>05/05/2024 — Enemies and spawner</h3>
+    <p>
+      I built enemy chase behaviour (detect → pursue). Initially enemies chased forever, so I added a timing/delay so chase
+      ends when the player leaves sight. I also created a spawner that supports multiple enemy types by introducing an enemy
+      class container and random selection for variety.
+    </p>
+
+    <h3>13/05/2024 — Teleport function</h3>
+    <p>
+      I added a function that teleports the player back to a stored location. Casting to the character Blueprint gave access
+      to a “Location Before” variable. Centralising this in a function kept calls short and reusable across battle transitions.
+    </p>
+
+    <h2>Reflection — 17/05/2024</h2>
+    <p>
+      Over this year I’ve learned a lot and grown across both C++ and Unreal’s Blueprint scripting. Many principles from prior
+      coding experience carried over, so most friction was syntactic or engine-specific. I missed documenting some stretches
+      (busy with projects), but I focused on logging the most instructive moments. If I could redo the year, I’d manage time
+      better and flesh out more projects to completion. Next year I’ll deepen C++ further—strong fundamentals there pay off in
+      Unreal and in general game programming.
+    </p>
+  </section>
 </Base>
