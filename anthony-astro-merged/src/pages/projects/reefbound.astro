@@ -33,6 +33,13 @@ import Base from "../../layouts/Base.astro";
       foliage, item handling, mob behaviour, and player-facing survival systems.
     </p>
 
+    <div class="media-block">
+      <video src="/media/reefbound/videos/reefbound-hero.mp4" autoplay muted loop playsinline controls></video>
+      <p class="caption">
+        Gameplay overview showing the island, ocean setting, and transition into underwater exploration.
+      </p>
+    </div>
+
     <h2>Links</h2>
     <div class="project-links">
       <a href="https://antoneee.itch.io/reefbound" target="_blank" rel="noopener noreferrer">
@@ -42,21 +49,6 @@ import Base from "../../layouts/Base.astro";
       <a href="https://youtu.be/K8FfyaWSRsM?si=vI09CGhbyC7NRmd1" target="_blank" rel="noopener noreferrer">
         Watch the Reefbound tutorial video
       </a>
-    </div>
-
-    <h2>Footage</h2>
-
-    <h3>Building</h3>
-    <video src="/media/divecraft/videos/building.mp4" autoplay muted loop playsinline></video>
-
-    <h3>Mining</h3>
-    <video src="/media/divecraft/videos/mining.mp4" autoplay muted loop playsinline></video>
-
-    <h3>Image Gallery</h3>
-    <div class="grid">
-      <img src="/media/divecraft/shots/divecraft1.jpg" alt="Generated Reefbound island view" />
-      <img src="/media/divecraft/shots/divecraft2.jpg" alt="Underwater Reefbound terrain" />
-      <img src="/media/divecraft/shots/divecraft3.jpg" alt="Voxel terrain layers in Reefbound" />
     </div>
 
     <h2>Technical Snapshot</h2>
@@ -76,6 +68,18 @@ import Base from "../../layouts/Base.astro";
       Each chunk owns its own block, water, foliage, cave, biome, and landmark data. Generation is split into stages so the
       world can prepare terrain, caves, reefs, ores, and foliage in a controlled order.
     </p>
+
+    <div class="media-grid">
+      <figure>
+        <img src="/media/reefbound/images/reefbound-island-overview.jpg" alt="Procedurally generated Reefbound island overview" />
+        <figcaption>Procedural island generation, coastline shaping, and voxel terrain layout.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="/media/reefbound/images/reefbound-underwater-terrain.jpg" alt="Underwater terrain in Reefbound" />
+        <figcaption>Underwater terrain, seabed variation, and ocean exploration space.</figcaption>
+      </figure>
+    </div>
 
     <ul>
       <li>Built a 16×128×16 chunk structure with separate block, water, foliage, and cave-mask arrays.</li>
@@ -99,6 +103,24 @@ import Base from "../../layouts/Base.astro";
       <li>Handled atlas UVs for a 5×10 block atlas using 32×32 pixel block textures.</li>
     </ul>
 
+    <h3>Block Mining and Building</h3>
+    <p>
+      The terrain is editable during play. Blocks can be mined with visual crack feedback, converted into item drops, collected,
+      and later placed back into the voxel world through the hotbar.
+    </p>
+
+    <div class="media-grid">
+      <figure>
+        <video src="/media/reefbound/videos/reefbound-mining.mp4" autoplay muted loop playsinline controls></video>
+        <figcaption>Mining blocks with crack feedback, drops, and chunk updates.</figcaption>
+      </figure>
+
+      <figure>
+        <video src="/media/reefbound/videos/reefbound-building.mp4" autoplay muted loop playsinline controls></video>
+        <figcaption>Placing blocks back into the world using the hotbar and inventory loop.</figcaption>
+      </figure>
+    </div>
+
     <h3>Block-Based Water System</h3>
     <p>
       Water was one of the main technical focuses of the project. Reefbound uses block-based water states instead of a shader-only
@@ -119,6 +141,18 @@ import Base from "../../layouts/Base.astro";
       player dives below sea level.
     </p>
 
+    <div class="media-grid">
+      <figure>
+        <video src="/media/reefbound/videos/reefbound-underwater-atmosphere.mp4" autoplay muted loop playsinline controls></video>
+        <figcaption>Underwater fog, depth tinting, lighting changes, and ocean readability.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="/media/reefbound/images/reefbound-coral-glow.jpg" alt="Glowing coral underwater in Reefbound" />
+        <figcaption>Coral glow lighting used to make underwater areas feel more alive.</figcaption>
+      </figure>
+    </div>
+
     <ul>
       <li>Created an underwater fog controller with depth-based tint, vignette, fog colour, and fog density blending.</li>
       <li>Added underwater particle support for visual depth and atmosphere.</li>
@@ -132,6 +166,25 @@ import Base from "../../layouts/Base.astro";
       Reefbound includes a survival-style item loop built around gathering materials, storing items, crafting stations, smelting,
       and creating tools.
     </p>
+
+    <div class="media-grid">
+      <figure>
+        <img src="/media/reefbound/images/reefbound-inventory.jpg" alt="Inventory UI in Reefbound" />
+        <figcaption>Inventory, item storage, hotbar selection, and survival item flow.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="/media/reefbound/images/reefbound-smeltery.jpg" alt="Smeltery system in Reefbound" />
+        <figcaption>Smeltery interface for fuel, raw materials, molten output, and progression.</figcaption>
+      </figure>
+    </div>
+
+    <div class="media-block">
+      <video src="/media/reefbound/videos/reefbound-crafting-smelting.mp4" autoplay muted loop playsinline controls></video>
+      <p class="caption">
+        Crafting and smelting footage showing the survival progression loop in use.
+      </p>
+    </div>
 
     <ul>
       <li>Built an inventory system with stack merging, cursor splitting, right-click transfer, hotbar slots, gear slots, and chest storage.</li>
@@ -160,6 +213,18 @@ import Base from "../../layouts/Base.astro";
       Reefbound includes both peaceful and hostile mobs, with different movement systems for land and water creatures.
       Each mob has its own behaviour script rather than sharing one generic brain.
     </p>
+
+    <div class="media-grid">
+      <figure>
+        <video src="/media/reefbound/videos/reefbound-ocean-life.mp4" autoplay muted loop playsinline controls></video>
+        <figcaption>Ocean life and creature behaviours in the generated world.</figcaption>
+      </figure>
+
+      <figure>
+        <video src="/media/reefbound/videos/reefbound-mob-combat.mp4" autoplay muted loop playsinline controls></video>
+        <figcaption>Hostile mob combat using hitboxes, health, movement, and drop systems.</figcaption>
+      </figure>
+    </div>
 
     <ul>
       <li>Created a mob spawn manager with distance checks, chunk checks, depth bands, group spawning, despawning, night spawning, and darkness requirements.</li>
@@ -252,23 +317,48 @@ import Base from "../../layouts/Base.astro";
       transform: translateY(-1px);
     }
 
+    .media-block {
+      margin: 1.25rem 0 2rem;
+    }
+
     video {
       width: 100%;
+      max-height: 720px;
       border-radius: 0.75rem;
-      margin: 0.5rem 0 1.5rem;
+      margin: 0.5rem 0 0.4rem;
+      background: #000;
+      display: block;
     }
 
-    .grid {
+    .media-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 1rem;
-      margin: 1rem 0 2rem;
+      margin: 1rem 0 1.75rem;
     }
 
-    .grid img {
+    .media-grid figure {
+      margin: 0;
+    }
+
+    .media-grid img {
       width: 100%;
       border-radius: 0.75rem;
       object-fit: cover;
+      display: block;
+    }
+
+    .media-grid video {
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .caption,
+    .media-grid figcaption {
+      font-size: 0.9rem;
+      opacity: 0.78;
+      margin-top: 0.45rem;
+      line-height: 1.45;
     }
   </style>
 </Base>
