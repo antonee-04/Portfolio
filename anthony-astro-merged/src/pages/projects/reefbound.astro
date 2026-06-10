@@ -2,99 +2,273 @@
 import Base from "../../layouts/Base.astro";
 ---
 
-<Base title="Reefbound — Procedural Voxel Ocean Survival" description="Final-year: procedural islands, blocky wave simulation, chunk meshing.">
-  <h1>Reefbound — Procedural Voxel Ocean Survival <span style="font-size:.6em;opacity:.8">• Final-Year Project</span></h1>
+<Base
+  title="Reefbound — Procedural Voxel Ocean Survival"
+  description="Final-year Unity project focused on procedural voxel terrain, underwater exploration, survival systems, mobs, crafting, smelting, and custom water behaviour."
+>
+  <h1>
+    Reefbound — Procedural Voxel Ocean Survival
+    <span style="font-size:.6em;opacity:.8">• Final-Year Project</span>
+  </h1>
 
   <p class="muted">
-    <strong>Engine:</strong> Unity 2022 LTS &nbsp;•&nbsp; <strong>Language:</strong> C# &nbsp;•&nbsp; <strong>Role:</strong> Solo Developer
+    <strong>Engine:</strong> Unity &nbsp;•&nbsp;
+    <strong>Language:</strong> C# &nbsp;•&nbsp;
+    <strong>Role:</strong> Solo Developer &nbsp;•&nbsp;
+    <strong>Focus:</strong> Procedural generation, voxel systems, water, survival mechanics, mobs
   </p>
 
   <section class="prose">
     <h2>Overview</h2>
     <p>
-    Reefbound is my final-year Unity project: a voxel ocean survival prototype built around procedural island generation, chunk-based meshing, underwater exploration, and stylised block-based water systems.
-    The project focuses on making a voxel world feel distinct from Minecraft by pushing the setting toward a deep ocean survival experience. 
-    Instead of using a standard terrain workflow, I built a custom chunk pipeline that generates islands, seabeds, terrain layers, water volumes, and interactive blocks through code.
+      Reefbound is my final-year Unity project: a voxel ocean survival prototype built around procedural island generation,
+      underwater exploration, custom chunk meshing, block-based water, crafting, smelting, tools, inventory systems, mobs,
+      and environmental feedback.
     </p>
 
+    <p>
+      The aim of the project was to explore how a voxel game could feel distinct from Minecraft by shifting the focus away
+      from land-based mining and towards a deeper ocean survival experience. Instead of using Unity terrain or prebuilt voxel
+      tools, I built the world pipeline myself, including chunk data, terrain generation, mesh construction, water simulation,
+      foliage, item handling, mob behaviour, and player-facing survival systems.
+    </p>
+
+    <h2>Links</h2>
+    <div class="project-links">
+      <a href="https://antoneee.itch.io/reefbound" target="_blank" rel="noopener noreferrer">
+        Play Reefbound on itch.io
+      </a>
+
+      <a href="https://youtu.be/K8FfyaWSRsM?si=vI09CGhbyC7NRmd1" target="_blank" rel="noopener noreferrer">
+        Watch the Reefbound tutorial video
+      </a>
+    </div>
+
     <h2>Footage</h2>
+
     <h3>Building</h3>
     <video src="/media/divecraft/videos/building.mp4" autoplay muted loop playsinline></video>
+
     <h3>Mining</h3>
     <video src="/media/divecraft/videos/mining.mp4" autoplay muted loop playsinline></video>
 
     <h3>Image Gallery</h3>
     <div class="grid">
-      <img src="/media/divecraft/shots/divecraft1.jpg" alt="Generated island view"/>
-      <img src="/media/divecraft/shots/divecraft2.jpg" alt="Underwater terrain"/>
-      <img src="/media/divecraft/shots/divecraft3.jpg" alt="Terrain layers"/>
+      <img src="/media/divecraft/shots/divecraft1.jpg" alt="Generated Reefbound island view" />
+      <img src="/media/divecraft/shots/divecraft2.jpg" alt="Underwater Reefbound terrain" />
+      <img src="/media/divecraft/shots/divecraft3.jpg" alt="Voxel terrain layers in Reefbound" />
     </div>
 
-    <h2>What I built (programmer focus)</h2>
-
-    <h3>Chunked world & generation</h3>
+    <h2>Technical Snapshot</h2>
     <ul>
-      <li>
-        A <strong>Worlds</strong> singleton spawns a grid of chunk GameObjects and keeps a lookup of loaded chunks. It batches creation over frames to avoid stalls.
-      </li>
-      <li>
-        Each <strong>Chunks</strong> instance fills a 16×128×16 voxel array, blends
-        an island radial mask with Perlin detail, layers materials (grass/dirt/limestone/stone),
-        and fills above terrain with water up to a defined sea level.
-      </li>
+      <li><strong>Chunk size:</strong> 16×128×16 voxel chunks, split into 16-block-high sub-chunks.</li>
+      <li><strong>World generation:</strong> Seeded procedural terrain using layered Perlin noise, ridge noise, erosion-style noise, biome weights, underwater caves, ravines, air pockets, reefs, ores, and foliage passes.</li>
+      <li><strong>Rendering:</strong> Custom mesh generation for solid blocks, water, foliage, block items, and voxelised held items.</li>
+      <li><strong>Water:</strong> Block-based water with source, falling, and flowing states, controlled through a queued frontier update system.</li>
+      <li><strong>Gameplay systems:</strong> Inventory, hotbar, chests, crafting, tool crafting, smelting, drops, gear slots, mobs, damage feedback, and underwater UI feedback.</li>
     </ul>
 
-    <h3>Meshing & materials</h3>
+    <h2>What I Built</h2>
+
+    <h3>Procedural Voxel World Generation</h3>
+    <p>
+      Reefbound uses a custom <strong>Worlds</strong> manager to create, stream, update, and store chunks around the player.
+      Each chunk owns its own block, water, foliage, cave, biome, and landmark data. Generation is split into stages so the
+      world can prepare terrain, caves, reefs, ores, and foliage in a controlled order.
+    </p>
+
     <ul>
-      <li>
-        Solid block mesh is built face-by-face only where neighbors are non-solid (air/water), with UVs
-        pulled from a block atlas; water uses a separate child “WaterMesh” with its own material/UVs, and
-        we skip water-to-water faces for fill-rate.
-      </li>
-      <li>
-        UV helpers, face tables, atlas sizing, and shape flags live in <strong>VoxelData</strong> (e.g., 16×16 chunk width, atlas size = 7, sea level, per-face UV rotation).
-      </li>
+      <li>Built a 16×128×16 chunk structure with separate block, water, foliage, and cave-mask arrays.</li>
+      <li>Generated terrain using island shaping, domain-style warping, fractal noise, ridge noise, erosion noise, and biome weighting.</li>
+      <li>Added underwater cave systems, ravines, air pockets, reef landmarks, and biome-specific ore placement.</li>
+      <li>Created terrain layers including grass, dirt, stone, sand, limestone, dark sand, gravel, basalt, slate, coral blocks, and ore blocks.</li>
+      <li>Built an island debug exporter to help inspect generated terrain and tune world shape visually.</li>
     </ul>
 
-    <h3>Interaction & player controller</h3>
+    <h3>Chunk Meshing, Colliders, and Streaming</h3>
+    <p>
+      The world is rendered through custom mesh builders rather than individual block GameObjects. Chunks generate visible
+      faces only where needed, then separate their solid, water, and foliage meshes so each system can be rebuilt independently.
+    </p>
+
     <ul>
-      <li>
-        <strong>PlayerController</strong> does mouse-look + CharacterController movement, block breaking/placing via camera raycasts,
-        and swim logic when feet are inside a water block (space to rise, shift to sink faster).
-      </li>
-      <li>
-        <strong>Hotbar</strong> cycles block types, with a simple TMP UI showing the current selection.
-      </li>
+      <li>Created face-culling mesh generation for solid blocks, water surfaces, and foliage.</li>
+      <li>Split chunk meshes into sub-chunks to reduce rebuild cost when only part of a chunk changes.</li>
+      <li>Added collider refresh logic so chunks can keep collision active near the player and demote distant chunks to data-only states.</li>
+      <li>Used dirty flags to rebuild only the systems that changed, such as solid mesh, water mesh, foliage mesh, or collider data.</li>
+      <li>Handled atlas UVs for a 5×10 block atlas using 32×32 pixel block textures.</li>
     </ul>
 
-    <h2>Representative code</h2>
+    <h3>Block-Based Water System</h3>
+    <p>
+      Water was one of the main technical focuses of the project. Reefbound uses block-based water states instead of a shader-only
+      ocean, allowing water to exist inside the voxel world and respond to terrain edits.
+    </p>
 
-    <pre class="code"><code class="language-csharp">{`// Worlds: spawn chunk grid (batched)
-for (int i = 0; i < chunkCoords.Count; i += 8) {
-  for (int j = 0; j < 8 && i + j < chunkCoords.Count; j++) {
-    var coord = chunkCoords[i + j];
-    // new GameObject("Chunk_x_y") + AddComponent<Chunks>() + GenerateChunk()
-  }
-  // yield return null; // keep frame times smooth
-}`}</code></pre>
-
-    <pre class="code"><code class="language-csharp">{`// Chunks: only emit faces against non-solid neighbors (skip water→water)
-if (!IsSolid(neighbor)) {
-  // choose water or solid mesh buffers
-  // add 4 verts, 6 indices, and atlas UVs per visible face
-}`}</code></pre>
-
-    <pre class="code"><code class="language-csharp">{`// PlayerController: interact with voxels via camera ray
-if (Input.GetMouseButtonDown(0)) TryBreakBlock();
-if (Input.GetMouseButtonDown(1)) TryPlaceBlock();`}</code></pre>
-
-    <h2>Results & next steps (WIP)</h2>
     <ul>
-      <li>Stable chunked rendering with separate water mesh and atlas UVs.</li>
-      <li>Functional placement/breaking, swimming, and hotbar.</li>
-      <li><strong>Next:</strong> optimise meshing (greedy merge), expand island variety, add underwater caves & tides, and profiling passes.</li>
+      <li>Implemented source, falling, and flowing water states.</li>
+      <li>Used a queued frontier system so water updates are processed over time instead of recalculating the whole world instantly.</li>
+      <li>Limited water processing using a tick budget to keep updates controlled.</li>
+      <li>Generated water mesh heights from water levels, including sloped water surfaces for flowing cells.</li>
+      <li>Marked touched chunks as visually dirty so water mesh updates are rebuilt only where needed.</li>
     </ul>
 
-    <p><em>Note: This page represents an active, in-progress build for my final-year university project.</em></p>
+    <h3>Underwater Atmosphere and Lighting</h3>
+    <p>
+      Because Reefbound is focused on underwater exploration, I built visual systems that change the feel of the world when the
+      player dives below sea level.
+    </p>
+
+    <ul>
+      <li>Created an underwater fog controller with depth-based tint, vignette, fog colour, and fog density blending.</li>
+      <li>Added underwater particle support for visual depth and atmosphere.</li>
+      <li>Built a day-night lighting controller with sunrise, day, sunset, night, and underwater lighting states.</li>
+      <li>Added coral glow lighting to make underwater areas feel more alive and readable.</li>
+      <li>Linked darkness checks into mob spawning so certain enemies can spawn only at night or in darker areas.</li>
+    </ul>
+
+    <h3>Inventory, Hotbar, Crafting, and Smelting</h3>
+    <p>
+      Reefbound includes a survival-style item loop built around gathering materials, storing items, crafting stations, smelting,
+      and creating tools.
+    </p>
+
+    <ul>
+      <li>Built an inventory system with stack merging, cursor splitting, right-click transfer, hotbar slots, gear slots, and chest storage.</li>
+      <li>Created hotbar and inventory UI systems for selecting items, displaying icons, and interacting with storage containers.</li>
+      <li>Implemented crafting databases for normal recipes and tool-specific recipes.</li>
+      <li>Built a smeltery system that accepts fuel, smelts raw tin, raw manganese, and sand, stores molten output, and pours materials from taps.</li>
+      <li>Added placed crafting items and block item meshes so crafted blocks can exist in the voxel world and inventory loop.</li>
+    </ul>
+
+    <h3>Dynamic Tool Crafting</h3>
+    <p>
+      Rather than treating every tool as a completely separate fixed recipe, I built a dynamic tool system that combines heads,
+      rods, and bindings into different tool types.
+    </p>
+
+    <ul>
+      <li>Supported dynamic tool shapes including knives, pickaxes, drills, spears, and harpoons.</li>
+      <li>Validated tool parts based on tool kind, material, rod type, and binding type.</li>
+      <li>Calculated durability from the parts used to create the tool.</li>
+      <li>Generated held item meshes from item textures so tools and items appear voxelised in the player’s hand.</li>
+      <li>Added different held-item poses and actions for mining, lunging, drills, spears, and harpoons.</li>
+    </ul>
+
+    <h3>Mobs and Ocean Life</h3>
+    <p>
+      Reefbound includes both peaceful and hostile mobs, with different movement systems for land and water creatures.
+      Each mob has its own behaviour script rather than sharing one generic brain.
+    </p>
+
+    <ul>
+      <li>Created a mob spawn manager with distance checks, chunk checks, depth bands, group spawning, despawning, night spawning, and darkness requirements.</li>
+      <li>Built shared mob systems for health, drops, physics, animation parameters, attack hitboxes, and world queries.</li>
+      <li>Implemented land movement for crabs and pirate skeletons, including terrain stepping and simple target following.</li>
+      <li>Implemented swimming movement for reef fish, stingrays, turtles, plesiosaurs, megalodons, piraugunhas, and giant squids.</li>
+      <li>Added creature-specific behaviours such as clam shell closing, crab chasing, stingray poison jabs, reef fish fleeing, turtle taming/riding, and predator chase/attack states.</li>
+    </ul>
+
+    <h3>Survival Feedback and Player Interaction</h3>
+    <p>
+      I added several feedback systems to make the prototype feel more playable and less like a static terrain demo.
+    </p>
+
+    <ul>
+      <li>Built block breaking feedback using a crack overlay renderer.</li>
+      <li>Added player HUD feedback for health, oxygen, pressure, gear, selected items, and status effects.</li>
+      <li>Implemented player damage feedback so hits are communicated visually.</li>
+      <li>Created death drop caching so dropped items can persist through death flow logic.</li>
+      <li>Added item pickups, drop tables, pickup spawning, and debug tools for testing item flow quickly.</li>
+    </ul>
+
+    <h2>Technical Challenges</h2>
+
+    <h3>Keeping voxel updates manageable</h3>
+    <p>
+      A major challenge was avoiding full chunk rebuilds every time something changed. To solve this, I separated chunk systems
+      into solid, water, foliage, and collider rebuild paths, then used dirty flags and sub-chunk masks so only the required data
+      is refreshed.
+    </p>
+
+    <h3>Making water work inside a voxel world</h3>
+    <p>
+      Early water experiments focused more on visuals, but Reefbound needed water that could exist as part of the block world.
+      I moved towards block-based water states and a queued update system so water could flow after terrain edits without causing
+      huge frame spikes.
+    </p>
+
+    <h3>Building a survival loop around generated terrain</h3>
+    <p>
+      Once the world generation was working, the next challenge was giving the player reasons to interact with it. The inventory,
+      crafting, smelting, tools, mob drops, gear, chests, and item placement systems were built to turn the generated world into
+      something closer to a playable survival prototype.
+    </p>
+
+    <h2>What I Learned</h2>
+    <ul>
+      <li>How to design a voxel world as data first, then generate meshes, colliders, water, foliage, and gameplay systems from that data.</li>
+      <li>How to split large gameplay systems into smaller rebuildable parts to reduce unnecessary work.</li>
+      <li>How to use procedural generation for more than terrain height, including caves, ores, reefs, foliage, landmarks, and mob spawn rules.</li>
+      <li>How to connect technical systems to player-facing survival mechanics such as tools, crafting, smelting, gear, and combat.</li>
+      <li>How important debugging tools and visual feedback are when working with procedural worlds.</li>
+    </ul>
+
+    <h2>Current Status</h2>
+    <p>
+      Reefbound currently has a functioning procedural voxel world, chunk streaming, meshing, water flow, underwater atmosphere,
+      inventory, hotbar, crafting, smelting, tool creation, mobs, drops, lighting, and player feedback systems. The project is still
+      a prototype, but it now represents a broad technical vertical slice of the ocean survival game idea.
+    </p>
+
+    <h2>Next Steps</h2>
+    <ul>
+      <li>Polish the player progression loop so tools, oxygen gear, mobs, and resources guide the player more clearly.</li>
+      <li>Improve optimisation with further profiling, mesh rebuild tuning, and possible greedy meshing experiments.</li>
+      <li>Expand underwater cave structure and biome identity.</li>
+      <li>Improve mob balancing, animations, and combat readability.</li>
+      <li>Replace placeholder presentation areas with stronger gameplay footage and clearer screenshots.</li>
+    </ul>
   </section>
+
+  <style>
+    .project-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin: 1rem 0 2rem;
+    }
+
+    .project-links a {
+      display: inline-block;
+      padding: 0.75rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 0.75rem;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .project-links a:hover {
+      transform: translateY(-1px);
+    }
+
+    video {
+      width: 100%;
+      border-radius: 0.75rem;
+      margin: 0.5rem 0 1.5rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0 2rem;
+    }
+
+    .grid img {
+      width: 100%;
+      border-radius: 0.75rem;
+      object-fit: cover;
+    }
+  </style>
 </Base>

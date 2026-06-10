@@ -16,7 +16,13 @@ import ProjectCard from "../components/ProjectCard.astro";
     <h2>Featured Projects</h2>
     <div class="grid">
       <!-- Newer projects -->
-      <ProjectCard href="/projects/reefbound" title="Reefbound — A procedurally generated ocean survuval game" blurb="Perlin terrain + custom block-wave system; chunk meshing & culling for stable frame times." tags={['Unity','C#','Proc Gen','Performance']} image="/media/divecraft-hero.jpg" />
+      <ProjectCard
+      href="/projects/reefbound"
+      title="Reefbound — Procedural Voxel Ocean Survival"
+      blurb="Final-year Unity project with custom voxel terrain, chunk meshing, block-based water, crafting, smelting, mobs, and underwater survival systems."
+      tags={['Unity','C#','Voxels','Proc Gen','Survival']}
+      image="/media/divecraft-hero.jpg"
+      />
       <ProjectCard href="/projects/ai-grid" title="AI Grid Pathfinding" blurb="Custom grid graph, A*, terrain sampling, and debug overlays; fixed spikes & GC churn." tags={['Unity','AI','A*','Tools']} image="/media/aigrid-thumb.jpg" />
       <ProjectCard href="/projects/low-poly-rat-sim" title="Low‑poly Rat Simulator" blurb="URP + Cinemachine; ragdoll physics & tunnel mechanics." tags={['Unity','URP','C#']} image="/media/rat-sim.jpg" />
       <ProjectCard href="/projects/maths-for-games" title="AsterAvoid - uni project" blurb="A game built for my maths for games module at uni, combining a build system and a flight system to make a spaceship" tags={['Unity','Physics','Raycasting']} image="/media/maths-for-games.jpg" />
