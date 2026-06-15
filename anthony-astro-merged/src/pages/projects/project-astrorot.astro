@@ -16,9 +16,20 @@ const description = "A Unity FPS prototype about containing a zombie outbreak on
         A lunar zombie outbreak shooter about containing a failed moon-base test before the infection reaches Earth.
       </p>
 
-      <figure>
-        <img src="/media/project-astrorot/project-astrorot-hero.jpg" alt="Project AstroRot gameplay showing the player fighting zombies on a lunar test site" loading="eager" />
-        <figcaption> player aiming at an approaching zombie wave inside the lunar arena.</figcaption>
+      <figure class="feature-media">
+        <video
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          poster="/media/project-astrorot/project-astrorot-thumb.jpg"
+          aria-label="Project AstroRot gameplay showing the player fighting zombies on a lunar test site"
+        >
+          <source src="/media/project-astrorot/videos/project-astrorot-gameplay.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <figcaption>Main gameplay loop: start screen, lunar arena combat, zombie waves and HUD feedback.</figcaption>
       </figure>
     </section>
 
@@ -30,35 +41,15 @@ const description = "A Unity FPS prototype about containing a zombie outbreak on
       <p>
         The project focuses on gameplay programming and AI systems rather than using Unity's built-in NavMesh. I built a runtime-sampled grid graph, A* pathfinding, perception-driven enemy behaviour, variant-based zombie setup, wave spawning, scoring, HUD feedback, player health, recoil, ADS weapon handling and a simple menu flow.
       </p>
-    </section>
 
-    <section>
-      <h2>Gameplay footage</h2>
-      <video controls preload="metadata" poster="/media/project-astrorot/project-astrorot-thumb.jpg">
-        <source src="/media/project-astrorot/videos/project-astrorot-gameplay.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-      <p>
-        a shot of the gameplay from the start screen showcasing gameplay and zombie activity.
-      </p>
-    </section>
-
-    <section>
-      <h2>Image gallery</h2>
-      <div class="gallery">
-        <figure>
-          <img src="/media/project-astrorot/shots/project-astrorot-grid-debug.jpg" alt="Debug view of the custom grid graph used for zombie navigation" loading="lazy" />
-          <figcaption>Runtime grid graph and walkability debugging.</figcaption>
-        </figure>
-        <figure>
-          <img src="/media/project-astrorot/videos/project-astrorot-wave-combat.mp4" alt="Project AstroRot wave combat with HUD and zombies approaching" loading="lazy" />
-          <figcaption>Wave combat with round, score, zombie count and health visible.</figcaption>
-        </figure>
-        <figure>
-          <img src="/media/project-astrorot/videos/project-astrorot-variants.mp4" alt="Different zombie variants attacking the player in Project AstroRot" loading="lazy" />
-          <figcaption>Enemy variants such as melee, ranged and flanking behaviours.</figcaption>
-        </figure>
-      </div>
+      <figure class="inline-media">
+        <img
+          src="/media/project-astrorot/project-astrorot-hero.jpg"
+          alt="Project AstroRot gameplay showing the player aiming at zombies in the lunar arena"
+          loading="lazy"
+        />
+        <figcaption>The playable prototype reframes the original AI test into a lunar containment scenario.</figcaption>
+      </figure>
     </section>
 
     <section>
@@ -85,6 +76,15 @@ public IEnumerable<Edge> GetEdges(Node n)
         };
     }
 }`}</code></pre>
+
+      <figure class="inline-media">
+        <img
+          src="/media/project-astrorot/shots/project-astrorot-grid-debug.jpg"
+          alt="Debug view of the custom grid graph used for zombie navigation"
+          loading="lazy"
+        />
+        <figcaption>Runtime grid graph and walkability debugging, used to inspect how zombies interpret the arena.</figcaption>
+      </figure>
 
       <h3>A* pathfinding and movement</h3>
       <p>
@@ -118,6 +118,22 @@ for (int i = 0; i < hits.Length; i++)
         sensor.HearSound(soundPos);
 }`}</code></pre>
 
+      <figure class="inline-media">
+        <video
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          poster="/media/project-astrorot/project-astrorot-thumb.jpg"
+          aria-label="Project AstroRot wave combat showing zombies reacting to the player during a horde encounter"
+        >
+          <source src="/media/project-astrorot/videos/project-astrorot-wave-combat.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <figcaption>Combat is tied into perception: firing damages enemies, but also gives the horde a stimulus to investigate.</figcaption>
+      </figure>
+
       <h3>FSM plus GOAP-inspired decision layer</h3>
       <p>
         The enemy logic is split between a traditional FSM and a higher-level decision controller. The FSM handles concrete states such as idle, chase, investigate, search and attack. The GOAP-inspired layer selects a current goal based on what the zombie knows, then chooses an allowed action such as chasing, investigating sound, searching the last seen position, melee attacking, ranged attacking or flanking.
@@ -136,6 +152,23 @@ else
       <p>
         Enemy data is stored in <code>ZombieVariantSO</code> ScriptableObjects. Each variant can define health, move speed, attack range, score value, perception values, jump preference, ranged behaviour, flanking settings and a list of actions that the variant is allowed to use. This made it easier to create different enemy types without hardcoding every zombie separately.
       </p>
+
+      <figure class="inline-media">
+        <video
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          poster="/media/project-astrorot/project-astrorot-thumb.jpg"
+          aria-label="Different Project AstroRot zombie variants attacking the player"
+        >
+          <source src="/media/project-astrorot/videos/project-astrorot-variants.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <figcaption>Variants change the pressure of a wave, from simple melee enemies to ranged and flanking threats.</figcaption>
+      </figure>
+
       <ul>
         <li><strong>Shambler:</strong> slower pressure enemy using basic chase and melee actions.</li>
         <li><strong>Sprinter:</strong> faster close-range enemy that makes waves more chaotic.</li>
@@ -187,3 +220,35 @@ agent.speed += (currentWave - 1) * speedIncreasePerWave;`}</code></pre>
     </section>
   </main>
 </Base>
+
+<style>
+  .feature-media,
+  .inline-media {
+    margin: 1.5rem 0 2rem;
+  }
+
+  .feature-media img,
+  .feature-media video,
+  .inline-media img,
+  .inline-media video {
+    width: 100%;
+    display: block;
+    border-radius: 1rem;
+    object-fit: cover;
+  }
+
+  .feature-media video,
+  .inline-media video {
+    aspect-ratio: 16 / 9;
+  }
+
+  .inline-media {
+    max-width: 980px;
+  }
+
+  figcaption {
+    margin-top: 0.65rem;
+    font-size: 0.95rem;
+    opacity: 0.78;
+  }
+</style>
