@@ -1,0 +1,189 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const title = "Project AstroRot — Lunar Zombie Outbreak Shooter";
+const description = "A Unity FPS prototype about containing a zombie outbreak on the Moon, built around custom A* pathfinding, perception-driven enemy AI, enemy variants, wave spawning and responsive first-person combat.";
+---
+
+<Base title={title} description={description}>
+  <main class="project-page">
+    <p><a href="/projects">← Back to projects</a></p>
+
+    <section class="hero">
+      <p class="eyebrow">Unity • C# • AI Systems • Third-Year Programming Systems for Games</p>
+      <h1>Project AstroRot</h1>
+      <p class="lede">
+        A lunar zombie outbreak shooter about containing a failed moon-base test before the infection reaches Earth.
+      </p>
+
+      <figure>
+        <img src="/media/project-astrorot/project-astrorot-hero.jpg" alt="Project AstroRot gameplay showing the player fighting zombies on a lunar test site" loading="eager" />
+        <figcaption>Suggested hero image: player aiming at an approaching zombie wave inside the lunar test arena.</figcaption>
+      </figure>
+    </section>
+
+    <section>
+      <h2>Overview</h2>
+      <p>
+        Project AstroRot started as a custom grid-based zombie AI prototype and developed into a playable first-person horde shooter. The game is set during a failed lunar testing programme, where a zombie outbreak has broken containment on the Moon. The player's role is to hold the site, destroy the infected, and prevent the outbreak from reaching Earth.
+      </p>
+      <p>
+        The project focuses on gameplay programming and AI systems rather than using Unity's built-in NavMesh. I built a runtime-sampled grid graph, A* pathfinding, perception-driven enemy behaviour, variant-based zombie setup, wave spawning, scoring, HUD feedback, player health, recoil, ADS weapon handling and a simple menu flow.
+      </p>
+    </section>
+
+    <section>
+      <h2>Gameplay footage</h2>
+      <video controls preload="metadata" poster="/media/project-astrorot/project-astrorot-thumb.jpg">
+        <source src="/media/project-astrorot/videos/project-astrorot-gameplay.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <p>
+        Recommended clip: start screen into a live wave, pistol fire drawing enemy attention, zombies pathing through the arena, variant behaviour, score updates and the health UI under pressure.
+      </p>
+    </section>
+
+    <section>
+      <h2>Image gallery</h2>
+      <div class="gallery">
+        <figure>
+          <img src="/media/project-astrorot/shots/project-astrorot-grid-debug.jpg" alt="Debug view of the custom grid graph used for zombie navigation" loading="lazy" />
+          <figcaption>Runtime grid graph and walkability debugging.</figcaption>
+        </figure>
+        <figure>
+          <img src="/media/project-astrorot/videos/project-astrorot-wave-combat.mp4" alt="Project AstroRot wave combat with HUD and zombies approaching" loading="lazy" />
+          <figcaption>Wave combat with round, score, zombie count and health visible.</figcaption>
+        </figure>
+        <figure>
+          <img src="/media/project-astrorot/videos/project-astrorot-variants.mp4" alt="Different zombie variants attacking the player in Project AstroRot" loading="lazy" />
+          <figcaption>Enemy variants such as melee, ranged and flanking behaviours.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section>
+      <h2>Core systems</h2>
+
+      <h3>Custom grid navigation</h3>
+      <p>
+        The navigation system uses a <code>GridGraph</code> component that samples the level at runtime. Each node stores a world position and walkability state, with traversal rules based on obstacles, slope limits, step height and jump height. This gave me more control than a default NavMesh and made the AI behaviour easier to explain, debug and extend.
+      </p>
+      <pre><code>{`// GridGraph.cs — nodes expose traversal edges for A*
+public IEnumerable<Edge> GetEdges(Node n)
+{
+    foreach (var nb in GetNeighbours(n))
+    {
+        float heightDelta = nb.worldPos.y - n.worldPos.y;
+        bool requiresJump = heightDelta > maxStepHeight;
+        float baseCost = Vector3.Distance(n.worldPos, nb.worldPos);
+
+        yield return new Edge
+        {
+            node = nb,
+            cost = baseCost,
+            requiresJump = requiresJump
+        };
+    }
+}`}</code></pre>
+
+      <h3>A* pathfinding and movement</h3>
+      <p>
+        <code>AStarPathFinder</code> calculates routes over the sampled grid, while <code>PathAgent</code> follows those paths using Rigidbody movement. The agent can repath when goals move, draw debug paths, use a direct chase range close to the player, maintain a minimum player distance, avoid other zombies, and handle jumpable height changes under moon-style gravity.
+      </p>
+      <pre><code>{`// AStarPathFinder.cs — jump-aware path cost
+foreach (var edge in graph.GetEdges(current.node))
+{
+    if (!edge.node.walkable || closed.Contains(edge.node))
+        continue;
+
+    float jumpCost = edge.requiresJump
+        ? graph.jumpPenalty * jumpPenaltyMultiplier
+        : 0f;
+
+    float g = current.g + edge.cost + jumpCost;
+    float f = g + Heuristic(edge.node, goal);
+}`}</code></pre>
+
+      <h3>Perception-driven zombie AI</h3>
+      <p>
+        Zombies do not simply chase the player at all times. The <code>PerceptionSensor</code> checks field of view, line of sight, recent sight memory and sound events. Gunfire notifies nearby zombies through their hearing radius, and sound latching prevents constant firing from creating noisy repath spam.
+      </p>
+      <pre><code>{`// SimplePistol.cs — gunfire becomes a stimulus
+Collider[] hits = Physics.OverlapSphere(soundPos, soundRadius, zombieSenseMask);
+
+for (int i = 0; i < hits.Length; i++)
+{
+    PerceptionSensor sensor = hits[i].GetComponentInParent<PerceptionSensor>();
+    if (sensor != null)
+        sensor.HearSound(soundPos);
+}`}</code></pre>
+
+      <h3>FSM plus GOAP-inspired decision layer</h3>
+      <p>
+        The enemy logic is split between a traditional FSM and a higher-level decision controller. The FSM handles concrete states such as idle, chase, investigate, search and attack. The GOAP-inspired layer selects a current goal based on what the zombie knows, then chooses an allowed action such as chasing, investigating sound, searching the last seen position, melee attacking, ranged attacking or flanking.
+      </p>
+      <pre><code>{`// ZombieGoapController.cs — simplified goal selection
+if (perception.CanSeePlayer)
+    currentGoal = "EngagePlayer";
+else if (perception.HeardRecently)
+    currentGoal = "InvestigateSound";
+else if (perception.HasRecentSight)
+    currentGoal = "SearchLastSeen";
+else
+    currentGoal = "Wander";`}</code></pre>
+
+      <h3>Variant-based enemies</h3>
+      <p>
+        Enemy data is stored in <code>ZombieVariantSO</code> ScriptableObjects. Each variant can define health, move speed, attack range, score value, perception values, jump preference, ranged behaviour, flanking settings and a list of actions that the variant is allowed to use. This made it easier to create different enemy types without hardcoding every zombie separately.
+      </p>
+      <ul>
+        <li><strong>Shambler:</strong> slower pressure enemy using basic chase and melee actions.</li>
+        <li><strong>Sprinter:</strong> faster close-range enemy that makes waves more chaotic.</li>
+        <li><strong>Flanker:</strong> uses side-offset and serpentine-style movement instead of always taking the direct route.</li>
+        <li><strong>Spitter:</strong> keeps distance and uses ranged projectile attacks.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Wave, score and UI loop</h2>
+      <p>
+        <code>WaveManager</code> runs the horde loop. Each round increases the number of zombies, spawns them from defined spawn points, applies weighted variants, scales health and speed, tracks zombies alive, and awards score on death. The UI listens to wave, score and zombie-count events so the HUD updates without every system directly depending on each other.
+      </p>
+      <pre><code>{`// WaveManager.cs — round scaling
+zombiesToSpawn = startingZombies + (currentWave - 1) * zombiesPerWaveIncrease;
+health.maxHealth += (currentWave - 1) * healthIncreasePerWave;
+agent.speed += (currentWave - 1) * speedIncreasePerWave;`}</code></pre>
+      <p>
+        I also added a start screen, death screen, high score storage using PlayerPrefs, and a segmented health display that swaps full health bars into dots as the player takes damage.
+      </p>
+    </section>
+
+    <section>
+      <h2>Player combat and feel</h2>
+      <p>
+        The player uses a first-person controller with camera bob, recoil, ADS and a hitscan pistol. Firing applies visual feedback through muzzle effects and recoil, damages zombies through their health component, and broadcasts sound to nearby zombie perception sensors. This tied the weapon system directly into the AI loop: shooting is useful, but it also tells the horde where to go.
+      </p>
+    </section>
+
+    <section>
+      <h2>What I learned</h2>
+      <p>
+        This project helped me turn an isolated pathfinding prototype into a more complete gameplay system. The biggest lesson was that AI becomes more convincing when navigation, perception, combat and UI are connected carefully. A zombie that sees, hears, remembers, searches, attacks, gets scored, and affects wave pacing feels much more alive than a simple object moving toward the player.
+      </p>
+      <p>
+        I also learned the value of throttling expensive decisions. Repath intervals, target movement thresholds, sound latching and per-zombie thinking jitter helped keep groups of enemies from all updating in the same frame, which made the system more stable as the waves grew.
+      </p>
+    </section>
+
+    <section>
+      <h2>Next steps</h2>
+      <ul>
+        <li>Polish the lunar test-site art direction so the outbreak setting reads more clearly.</li>
+        <li>Add stronger feedback for ranged and flanking variants so players can identify threats faster.</li>
+        <li>Improve wave pacing with intermission upgrades or temporary objectives.</li>
+        <li>Profile larger waves and optimise the pathfinding/open-list implementation if needed.</li>
+        <li>Replace placeholder assets with a consistent sci-fi zombie visual style.</li>
+      </ul>
+    </section>
+  </main>
+</Base>
