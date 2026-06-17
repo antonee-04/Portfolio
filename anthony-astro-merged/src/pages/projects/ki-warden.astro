@@ -1,0 +1,194 @@
+---
+import Base from "../../layouts/Base.astro";
+---
+
+<Base
+  title="Ki Warden — Game Boy Colour Survival Shooter"
+  description="A Nintendo Game Boy Colour survival shooter built in RGBDS assembly, focused on direct hardware programming, sprite/OAM handling, VRAM tilemaps, palette work, sound registers, enemy behaviours, scoring, and progression."
+>
+  <h1>
+    Ki Warden — Game Boy Colour Survival Shooter
+    <span style="font-size:.6em;opacity:.8">• Targeting Platforms</span>
+  </h1>
+
+  <p class="muted">
+    <strong>Platform:</strong> Nintendo Game Boy Colour &nbsp;•&nbsp;
+    <strong>Language:</strong> RGBDS Assembly &nbsp;•&nbsp;
+    <strong>Role:</strong> Solo Developer &nbsp;•&nbsp;
+    <strong>Focus:</strong> hardware constraints, enemy behaviour, audio, scoring, HUD, game states
+  </p>
+
+  <section class="prose">
+    <h2>Overview</h2>
+    <p>
+      Ki Warden is a small survival shooter developed for the Nintendo Game Boy Colour using RGBDS assembly. The player controls a Ki Warden fighting hostile spirits inside a temple-style arena, surviving through advancing days while enemies scale, the score climbs, and Ki wave charges become more valuable.
+    </p>
+    <p>
+      Unlike my Unity and Unreal projects, this game was built close to the metal. I worked directly with Game Boy hardware concepts such as joypad input, OAM sprite drawing, VRAM tile loading, background tilemaps, CGB palettes, VBlank-safe updates, and sound registers rather than relying on a modern engine. It is tiny-machine swordplay, but with bytes instead of steel.
+    </p>
+
+    <div class="media-block">
+      <video src="/media/ki-warden/videos/ki-warden-gameplay-loop.mp4" autoplay muted loop playsinline controls></video>
+      <p class="caption">
+        Core gameplay loop showing movement, projectile firing, spirit enemies, score, day progression, health, and Ki wave charges.
+      </p>
+    </div>
+
+    <h2>Links</h2>
+    <div class="project-links">
+      <a href="https://github.com/antonee-04/Ki-Warden-Gameboy" target="_blank" rel="noopener noreferrer">
+        View Ki Warden on GitHub
+      </a>
+    </div>
+
+    <h2>Technical Snapshot</h2>
+    <ul>
+      <li><strong>Target platform:</strong> Nintendo Game Boy Colour ROM built with RGBDS.</li>
+      <li><strong>Game states:</strong> title screen, gameplay, game over, restart flow, high score handling.</li>
+      <li><strong>Rendering:</strong> sprite/OAM drawing, manual tile loading, background tilemaps, and custom CGB palette attributes.</li>
+      <li><strong>Gameplay:</strong> D-Pad movement, A-button projectile shooting, B-button Ki wave ability, health, invulnerability feedback, scoring, and day progression.</li>
+      <li><strong>Enemies:</strong> chasing, wandering, and phase spirits using simple behaviours tuned for limited CPU and memory.</li>
+      <li><strong>Audio:</strong> sound effects and music produced through Game Boy sound registers rather than audio files.</li>
+    </ul>
+
+    <h2>What I Built</h2>
+
+    <h3>Game State Flow and Presentation</h3>
+    <p>
+      I built the full game flow around title, gameplay, and game-over states. Each state controls its own background presentation, input behaviour, music, and transition rules, so the ROM feels like a complete handheld game rather than a loose prototype.
+    </p>
+
+    <div class="media-grid">
+      <figure>
+        <img src="/media/ki-warden/images/ki-warden-title-screen.jpg" alt="Ki Warden title screen on Game Boy Colour" />
+        <figcaption>Tilemap-based title screen used to introduce the game before play starts.</figcaption>
+      </figure>
+      <figure>
+        <img src="/media/ki-warden/images/ki-warden-game-over.jpg" alt="Ki Warden game over screen with high score" />
+        <figcaption>Game-over screen showing restart flow and high score feedback.</figcaption>
+      </figure>
+    </div>
+
+    <ul>
+      <li>Created a title screen, gameplay arena, and game-over screen using background tilemaps.</li>
+      <li>Added Start-button flow for starting and restarting the game.</li>
+      <li>Implemented high score display so the game keeps a clearer sense of progression after failure.</li>
+    </ul>
+
+    <h3>Temple Arena, HUD, and Sprite Feedback</h3>
+    <p>
+      The gameplay space uses a temple-style arena with HUD icons for health, day, score, and Ki wave charges. I used sprite feedback, flashing, knockback, and temporary invulnerability to make hits readable on a very small screen.
+    </p>
+
+    <div class="media-grid">
+      <figure>
+        <img src="/media/ki-warden/images/ki-warden-arena-hud.jpg" alt="Ki Warden temple arena HUD" />
+        <figcaption>Temple arena with health, score, day, and Ki wave HUD elements visible.</figcaption>
+      </figure>
+    </div>
+
+    <ul>
+      <li>Drew player, enemy, projectile, Ki wave, and HUD sprites through OAM.</li>
+      <li>Used simple sprite states to show damage, invulnerability, enemy hits, and player feedback.</li>
+      <li>Kept presentation readable within the Game Boy Colour screen and sprite constraints.</li>
+    </ul>
+
+    <h3>Enemy Behaviour and Day Scaling</h3>
+    <p>
+      Ki Warden uses multiple spirit behaviours so the arena changes over time. Chasing spirits pressure the player directly, wandering spirits create unpredictable movement across the arena, and phase spirits teleport near the player later in progression.
+    </p>
+
+    <div class="media-block">
+      <video src="/media/ki-warden/videos/ki-warden-enemy-scaling.mp4" autoplay muted loop playsinline controls></video>
+      <p class="caption">
+        Enemy behaviour and day scaling, showing different spirit types and the active enemy cap in play.
+      </p>
+    </div>
+
+    <ul>
+      <li>Implemented chasing, wandering, and phase spirit behaviour types.</li>
+      <li>Added four active enemy slots and an active cap to keep the game performant on the target hardware.</li>
+      <li>Scaled enemy count and behaviour availability through day progression.</li>
+    </ul>
+
+    <h3>Ki Projectiles and Ki Wave Ability</h3>
+    <p>
+      The player can fire standard Ki projectiles and use a stronger Ki wave ability with limited charges. The Ki wave has its own timer, collision checks, cooldown behaviour, and HUD display so it works as a tactical panic button rather than endless sparkle spam.
+    </p>
+
+    <div class="media-block">
+      <video src="/media/ki-warden/videos/ki-warden-ki-wave.mp4" autoplay muted loop playsinline controls></video>
+      <p class="caption">
+        Ki projectile and Ki wave behaviour, including charge usage, cooldown, enemy collision, and HUD feedback.
+      </p>
+    </div>
+
+    <ul>
+      <li>Built projectile movement and enemy collision checks.</li>
+      <li>Added a Ki wave ability with limited charges, visual sprites, collision, and cooldown recovery.</li>
+      <li>Increased maximum Ki wave charges every 10 days to reward survival and raise late-game power.</li>
+    </ul>
+
+    <h3>Game Boy Colour Audio</h3>
+    <p>
+      Music and sound effects were produced through Game Boy sound registers instead of imported audio. The game includes sound effects for shooting, Ki wave use, enemy hits, player damage, starting/restarting, and game over, with music for title, gameplay, and game-over states.
+    </p>
+
+    <div class="media-block">
+      <video
+      src="/media/ki-warden/videos/ki-warden-audio-showcase.mp4"
+      controls
+      playsinline
+      preload="auto"
+      ></video>
+      <p class="caption">
+        Audio showcase for title music, gameplay music, game-over music, and sound effects. This video keeps audio enabled, so it uses controls instead of muted autoplay.
+      </p>
+    </div>
+
+    <ul>
+      <li>Initialised and controlled Game Boy sound hardware directly.</li>
+      <li>Created short sound effects for important combat and state changes.</li>
+      <li>Added title, gameplay, and game-over music, with gameplay tempo increasing as the day count rises.</li>
+    </ul>
+
+    <h3>Building the ROM</h3>
+    <p>
+      The project builds through RGBDS by assembling the main source file, linking it into a Game Boy Colour ROM, and applying rgbfix so the output is a valid <code>.gbc</code> file.
+    </p>
+
+    <pre><code>rgbasm -o main.o main.asm
+rgblink -o KiWarden.gbc main.o
+rgbfix -v -C -p 0 KiWarden.gbc</code></pre>
+
+    <h2>Technical Challenges</h2>
+
+    <h3>Working inside hardware limits</h3>
+    <p>
+      The biggest challenge was building a complete game loop while staying inside the constraints of the Game Boy Colour. Every behaviour had to be simple enough to run consistently, and every piece of state had to be managed manually.
+    </p>
+
+    <h3>Making feedback readable on a small screen</h3>
+    <p>
+      Because the display is small and the sprite budget is limited, feedback had to be clear and economical. I used a focused HUD, compact sprites, flashing, knockback, and direct audio cues to make the game state understandable quickly.
+    </p>
+
+    <h3>Balancing progression with limited enemy slots</h3>
+    <p>
+      Rather than flooding the screen with enemies, I used day progression, spirit variants, Ki wave charge rewards, and score goals to create escalation within the small active enemy cap.
+    </p>
+
+    <h2>What I Learned</h2>
+    <ul>
+      <li>How to structure a complete game loop in RGBDS assembly.</li>
+      <li>How to work directly with Game Boy Colour input, sprites, VRAM, palettes, sound registers, and VBlank timing.</li>
+      <li>How to design enemy behaviours that are readable and cheap enough for constrained hardware.</li>
+      <li>How to use small amounts of feedback, audio, and progression to make a tiny ROM feel more complete.</li>
+    </ul>
+
+    <h2>Current Status</h2>
+    <p>
+      Ki Warden is a complete assessment-ready Game Boy Colour survival shooter prototype with title, gameplay, game-over flow, enemy variants, scoring, day progression, Ki wave charges, HUD feedback, sound effects, and music. It is small, sharp, and stubbornly handmade.
+    </p>
+  </section>
+</Base>

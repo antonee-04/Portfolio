@@ -23,6 +23,7 @@ import ProjectCard from "../components/ProjectCard.astro";
       tags={['Unity','C#','Voxels','Proc Gen','Survival']}
       image="/media/reefbound-hero.jpg"
       />
+
       <ProjectCard
       href="/projects/project-astrorot"
       title="Project AstroRot — Lunar Zombie AI Shooter"
@@ -30,10 +31,34 @@ import ProjectCard from "../components/ProjectCard.astro";
       tags={['Unity','C#','AI','A* Pathfinding','FPS']}
       image="/media/project-astrorot/project-astrorot-thumb.jpg"
       />
-      <ProjectCard href="/projects/low-poly-rat-sim" title="Low‑poly Rat Simulator" blurb="URP + Cinemachine; ragdoll physics & tunnel mechanics." tags={['Unity','URP','C#']} image="/media/rat-sim.jpg" />
-      <ProjectCard href="/projects/maths-for-games" title="AsterAvoid - uni project" blurb="A game built for my maths for games module at uni, combining a build system and a flight system to make a spaceship" tags={['Unity','Physics','Raycasting']} image="/media/maths-for-games.jpg" />
+
+      <ProjectCard
+      href="/projects/ki-warden"
+      title="Ki Warden — Game Boy Colour Survival Shooter"
+      blurb="Game Boy Colour survival shooter built in RGBDS assembly for the Targeting Platforms module, featuring wave-based spirit enemies, Ki projectiles, limited Ki wave charges, scoring, day progression, custom HUD, and hardware-driven sound."
+      tags={['Game Boy','RGBDS','Assembly','GBC','Survival Shooter']}
+      image="/media/ki-warden/images/ki-warden-thumb.jpg"
+      />
+
+            <ProjectCard href="/projects/maths-for-games" 
+      title="AsterAvoid - uni project" 
+      blurb="A game built for my maths for games module at uni, combining a build system and a flight system to make a spaceship" 
+      tags={['Unity','Physics','Raycasting']} 
+      image="/media/maths-for-games.jpg" />
+
+      <ProjectCard href="/projects/low-poly-rat-sim" 
+      title="Low‑poly Rat Simulator" 
+      blurb="URP + Cinemachine; ragdoll physics & tunnel mechanics." 
+      tags={['Unity','URP','C#']} 
+      image="/media/rat-sim.jpg" />
+
       <!-- old-era projects -->
-      <ProjectCard href="/projects/tools" title="2D Top Down RPG" blurb="A 2D Top Down RPG game using tiles and my own pixel art and animations" tags={['Unity','Editor','DX']} image="/media/tools-thumb.jpg" />
-      <ProjectCard href="/projects/api-multiplayer-chat" title="API Multiplayer Chat Room" blurb="Unity netcode demo with lobby & real-time chat." tags={['Unity','Netcode','Networking']} image="/media/api-chat.jpg" />
+      
+      <ProjectCard href="/projects/tools" 
+      title="2D Top Down RPG" 
+      blurb="A 2D Top Down RPG game using tiles and my own pixel art and animations" 
+      tags={['Unity','Editor','DX']} 
+      image="/media/tools-thumb.jpg" />
+
   </section>
 </Base>
