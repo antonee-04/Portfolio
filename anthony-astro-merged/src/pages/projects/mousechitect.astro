@@ -1,0 +1,177 @@
+---
+import Base from "../../layouts/Base.astro";
+---
+
+<Base
+  title="Mousechitect — City Builder Tools and Morale Systems | Anthony Grummett"
+  description="Portfolio case study for Anthony Grummett's Mousechitect work: grid-based build, destroy, move and path tools, morale scoring, and visual mouse population sync."
+>
+  <h1>Mousechitect — Build Tools, Morale, and Visual Population</h1>
+
+  <p>
+    <strong>Engine:</strong> Unity &nbsp;•&nbsp;
+    <strong>Language:</strong> C# &nbsp;•&nbsp;
+    <strong>Role:</strong> Gameplay / Systems Programmer &nbsp;•&nbsp;
+    <strong>Focus:</strong> grid placement tools, path tools, object movement, destruction flow, morale scoring, and visual mouse population feedback
+  </p>
+
+  <section>
+    <h2>Overview</h2>
+    <p>
+      Mousechitect is a team city-builder prototype about constructing and managing a mouse settlement. My work focused on the player-facing editing tools and supporting city systems: placing buildings, drawing paths, moving placed objects, destroying objects cleanly, calculating morale, and syncing the visible mouse population to the city state.
+    </p>
+    <p>
+      The main challenge was making the tools feel readable and safe. Build actions needed previews, grid snapping, occupancy checks, surface validation, cancel/confirm behaviour, and clear feedback so the player could understand what the city editor would do before committing a change.
+    </p>
+
+    <figure>
+      <video src="/media/mousechitect/videos/mousechitect-build-tools.mp4" autoplay muted loop playsinline controls></video>
+      <figcaption>Build, move, destroy, and path tools working through the grid-based city editor.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>Technical Snapshot</h2>
+    <ul>
+      <li>Grid-based object placement using shared snapping and occupied-cell tracking.</li>
+      <li>Build tool flow for previews, rotation, validation, placement, cancellation, and occupied-cell registration.</li>
+      <li>Path tool with path previews, grid footprints, 90-degree rotation, paint-style placement, save/load support, and movement-speed modifiers for pathfinding.</li>
+      <li>Destroy tool that highlights valid placed objects, removes buildings or paths, and frees their occupied cells.</li>
+      <li>Move tool that temporarily frees the selected object, previews it at a new position, validates the destination, then either confirms or restores the original state.</li>
+      <li>Morale system that blends contributor scores into global morale, smooths changes over time, and exposes productivity, retention, and arrival modifiers.</li>
+      <li>Visual mouse population sync that spawns visible mice up to the current population and visual capacity limit.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What I Built</h2>
+
+    <h3>Build Tool and Grid Placement</h3>
+    <p>
+      I worked on the main grid-based building flow: entering build mode, spawning a ghost preview, snapping it to the grid, rotating it, checking occupied cells, validating the placement area, and registering the object once placed. The build logic also connects with the path system so buildings cannot be placed over path cells.
+    </p>
+    <figure>
+      <img src="/media/mousechitect/shots/mousechitect-build-preview.jpg" alt="Mousechitect building preview snapped to the grid with placement feedback" loading="lazy" />
+      <figcaption>Building preview, grid snapping, and placement feedback before committing the object.</figcaption>
+    </figure>
+    <ul>
+      <li>Created the build-mode flow for selecting prefabs, previewing placement, confirming placement, and cancelling safely.</li>
+      <li>Used footprint cells to track occupied areas rather than relying only on object transforms.</li>
+      <li>Added validation hooks for object footprints, wall-adjacent placement, bridge-style surface rules, and water/land surface checks.</li>
+      <li>Connected placement to shared metadata so placed objects can later be moved, destroyed, and saved.</li>
+    </ul>
+
+    <h3>Path Tool</h3>
+    <p>
+      I built the path placement tool around the same grid logic as buildings, but tuned it for fast repeated placement. Paths keep the tool active after placement, can be rotated in 90-degree steps, and store speed modifiers so the grid can be used by movement/pathfinding systems.
+    </p>
+    <figure>
+      <video src="/media/mousechitect/videos/mousechitect-path-tool.mp4" autoplay muted loop playsinline controls></video>
+      <figcaption>Path drawing with repeated placement, grid footprints, rotation, and path-cell registration.</figcaption>
+    </figure>
+    <ul>
+      <li>Built path previews that follow the mouse and snap to the grid.</li>
+      <li>Added occupied-path checks so buildings and paths do not trample each other like tiny civic gremlins.</li>
+      <li>Stored placed path data by unique ID for save/load and clean removal.</li>
+      <li>Updated grid cell speed modifiers when paths are placed, removed, moved, or loaded.</li>
+    </ul>
+
+    <h3>Destroy Tool</h3>
+    <p>
+      I created a destroy tool for removing placed buildings and paths through a simple hover-and-click interaction. It highlights the current target, checks whether the target is a building or path, then calls the correct removal path so cells and path data are cleared cleanly.
+    </p>
+    <figure>
+      <video src="/media/mousechitect/videos/mousechitect-destroy-tool.mp4" autoplay muted loop playsinline controls></video>
+      <figcaption>Destroy tool hover feedback and clean removal of placed city objects.</figcaption>
+    </figure>
+    <ul>
+      <li>Added hover highlighting for placed objects.</li>
+      <li>Supported both legacy material tinting and shader-based highlight feedback.</li>
+      <li>Freed occupied cells when objects are removed.</li>
+      <li>Routed path removal through the path tool so path dictionaries and grid speed modifiers stay in sync.</li>
+    </ul>
+
+    <h3>Move Tool</h3>
+    <p>
+      I worked on the move tool so players can select an existing object, drag it to a new valid position, rotate it, then either confirm the move or cancel back to the original state. While an object is being moved, its old cells are temporarily freed so the validation logic does not collide with itself.
+    </p>
+    <figure>
+      <video src="/media/mousechitect/videos/mousechitect-move-tool.mp4" autoplay muted loop playsinline controls></video>
+      <figcaption>Moving a placed object, previewing the new footprint, validating the destination, and confirming the new position.</figcaption>
+    </figure>
+    <ul>
+      <li>Cached original position, rotation, and occupied cells so cancelled moves can restore correctly.</li>
+      <li>Temporarily cleared building or path occupancy while dragging.</li>
+      <li>Reused build-placement validation so moved objects follow the same rules as newly placed ones.</li>
+      <li>Added last-valid-state restoration to stop invalid preview positions from leaving objects stranded.</li>
+    </ul>
+
+    <h3>Morale System</h3>
+    <p>
+      I built a city-wide morale system that collects contributor scores, blends them into a baseline morale value, smooths global morale over time, and converts morale into gameplay modifiers. This made morale usable by other systems without hard-coding every factor directly into one giant cheese-wheel script.
+    </p>
+    <figure>
+      <img src="/media/mousechitect/shots/mousechitect-morale-debug.jpg" alt="Mousechitect morale debug UI showing morale score and modifiers" loading="lazy" />
+      <figcaption>Morale debug view showing the current global morale state and related modifiers.</figcaption>
+    </figure>
+    <ul>
+      <li>Calculated global morale from weighted contributor categories including housing, food, recreation, and aesthetics.</li>
+      <li>Smoothed morale changes over time to avoid sudden jumps.</li>
+      <li>Updated per-mouse morale from the current baseline, then used the average mouse morale as the global value.</li>
+      <li>Converted morale into productivity, retention, and arrival-chance modifiers.</li>
+      <li>Added food-variety and decoration/aesthetics contributors, including tag-based decoration synergy checks.</li>
+    </ul>
+
+    <h3>Visual Mouse Population Sync</h3>
+    <p>
+      I updated the visual population sync so the number of visible mouse GameObjects follows the current population while respecting the visual capacity cap. This keeps the settlement readable without needing to spawn one visible mouse for every official population unit.
+    </p>
+    <figure>
+      <video src="/media/mousechitect/videos/mousechitect-population-mice.mp4" autoplay muted loop playsinline controls></video>
+      <figcaption>Visible mice appearing as population and available visual capacity increase.</figcaption>
+    </figure>
+    <ul>
+      <li>Calculated the target visible mouse count from current population and visual capacity.</li>
+      <li>Spawned mice until the visible count reached the target.</li>
+      <li>Initialised mouse preferences and randomised appearance when new visual mice are spawned.</li>
+      <li>Kept the visual layer separate from the official population number so the city can scale without becoming a furry particle storm.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Technical Challenges</h2>
+
+    <h3>Keeping tools consistent</h3>
+    <p>
+      Build, move, destroy, and path tools all needed to agree about grid cells, object metadata, and validity rules. I solved this by using shared placed-object data and routing changes through the correct manager instead of letting each tool secretly rewrite the city in its own little cupboard.
+    </p>
+
+    <h3>Making invalid actions readable</h3>
+    <p>
+      The tools needed to show when an action was safe before the player clicked. Preview opacity, hover highlights, shader preview colours, last-valid-state restores, and cancel behaviour helped make the editor feel more understandable.
+    </p>
+
+    <h3>Connecting simulation values to visible feedback</h3>
+    <p>
+      Morale and population are abstract systems, so I worked on ways to make them affect gameplay-facing values and visible mouse counts. The result gives the city a clearer sense of life without forcing every system to depend directly on every other system.
+    </p>
+  </section>
+
+  <section>
+    <h2>What I Learned</h2>
+    <ul>
+      <li>How to structure city-building tools around shared grid data and object metadata.</li>
+      <li>How to keep placement, movement, destruction, and path editing consistent across separate tools.</li>
+      <li>How to turn abstract simulation values like morale into modifiers other systems can use.</li>
+      <li>How important clear preview feedback is when players are editing a world directly.</li>
+      <li>How to be careful with team-project portfolio wording so the page only claims the systems I worked on.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Current Status</h2>
+    <p>
+      Mousechitect includes a working grid-based city editing workflow with build, path, move, and destroy tools, plus morale and visible population feedback systems. This page focuses only on the systems I worked on and avoids claiming ownership of unrelated team features.
+    </p>
+  </section>
+</Base>
